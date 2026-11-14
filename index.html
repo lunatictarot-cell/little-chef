@@ -360,6 +360,15 @@ button:active:not(.bare){translate:0 2px}
 #again::before{content:"";display:block;position:absolute;pointer-events:none;inset:18%;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M19%2043Q24%2013%2052%2013Q85%2013%2087%2043Q93%2080%2057%2087Q33%2091%2019%2069L31%2061Q42%2079%2059%2069Q78%2061%2069%2040Q53%2017%2036%2042H49L25%2061L8%2039Z%22%20fill%3D%22%23468774%22%20stroke%3D%22%23594552%22%20stroke-width%3D%222.5%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat}
 #check{font-size:0}
 #check::before{content:"";display:block;position:absolute;pointer-events:none;inset:18%;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M20%2052l20%2018l39%20-43%22%20fill%3D%22none%22%20stroke%3D%22%23fff5dc%22%20stroke-width%3D%2213%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat}
+
+/* ---------- 방 고르기 ---------- */
+#rtabs{position:absolute;right:92px;top:14px;display:flex;gap:8px;z-index:400}
+.round.rtab{position:relative;width:64px;height:64px;display:flex;align-items:center;justify-content:center;line-height:0}
+.rtab svg{pointer-events:none}
+.rtab.cur{outline:5px solid #df795c;outline-offset:-2px}
+.rtab.lock svg{filter:grayscale(1) opacity(.4)}
+.rtab i{position:absolute;left:50%;bottom:-10px;translate:-50% 0;padding:0 7px;height:22px;border-radius:11px;background:#58434a;color:#fff;font-style:normal;font-size:14px;line-height:22px;white-space:nowrap}
+.rtab.no{animation:no .4s}
 </style>
 </head>
 <body>
@@ -554,6 +563,7 @@ button:active:not(.bare){translate:0 2px}
     <div id="room"></div>
     <button class="round goback" data-go="town" aria-label="뒤로">⬅️</button>
     <div class="bubble">선물을 끌어다 집을 꾸며요</div>
+    <div id="rtabs"></div>
     <div id="shelf"></div>
     <button id="shelfNext" class="round" aria-label="다음">▶️</button>
   </section>
@@ -1626,13 +1636,105 @@ const fitW = (id, s) => { const v = A[id].vb || [100, 100]; return Math.min(s, s
 
 /* ================= 저장 ================= */
 const made = (() => { try { return JSON.parse(localStorage.getItem('littleChefMade')) || {}; } catch (e) { return {}; } })();
-const save = (() => { let s = {}; try { s = JSON.parse(localStorage.getItem('littleChefSave')) || {}; } catch (e) {} return Object.assign({ inv: { d_plant: 1, d_ball: 1 }, room: [], served: {} }, s); })();
+const save = (() => { let s = {}; try { s = JSON.parse(localStorage.getItem('littleChefSave')) || {}; } catch (e) {} s = Object.assign({ inv: { d_plant: 1, d_ball: 1 }, served: {} }, s); if (!s.rooms) s.rooms = { living: s.room || [] }; delete s.room; return s; })();
 const store = () => { try { localStorage.setItem('littleChefSave', JSON.stringify(save)); } catch (e) {} };
 const servedAll = () => Object.values(save.served).reduce((a, b) => a + b, 0);
-// 아직 없는 선물부터 준다. 다 모았으면 아무거나 하나 더
+
+/* ================= 방 (선물을 모으면 하나씩 열린다) ================= */
+const nG = h => `url(#pigment-${h})`, OL = '#594552';
+const nP = (d, h) => `<path d="${d}" fill="${nG(h)}" stroke="${OL}" stroke-width="2.5"/>`;
+const nR = (x, y, w, h, rx, col) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${nG(col)}" stroke="${OL}" stroke-width="2.5"/>`;
+const nE = (x, y, rx, ry, col, st = 1) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${nG(col)}"${st ? ` stroke="${OL}" stroke-width="2.5"` : ''}/>`;
+const nL = (d, col = OL, w = 2.5) => `<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}"/>`;
+const nH = d => nL(d, '#fff5dc', 3);
+Object.assign(A, {
+  /* 주방 */
+  d_fridge: { vb: [90, 140], b: nR(16, 126, 12, 10, 3, 'bf865d') + nR(62, 126, 12, 10, 3, 'bf865d') + nR(8, 6, 74, 124, 12, 'c7e6e2') + nL('M8 52H82') + nR(16, 22, 7, 20, 3, 'fff5dc') + nR(16, 62, 7, 30, 3, 'fff5dc') + nE(60, 74, 5, 5, 'ed715c', 0) + nE(66, 92, 4, 4, 'f6b951', 0) + nH('M72 16v24') },
+  d_stove: { vb: [110, 120], b: nR(8, 24, 94, 90, 8, 'fffef2') + nR(4, 14, 102, 14, 6, '79636e') + nE(34, 14, 15, 4, '594552', 0) + nE(76, 14, 15, 4, '594552', 0) + nE(28, 42, 5, 5, 'ed715c') + nE(55, 42, 5, 5, 'f6b951') + nE(82, 42, 5, 5, '66b6ba') + nR(22, 58, 66, 44, 8, '66b6ba') + nL('M28 53H82', OL, 4) + nH('M32 70l12 -6') },
+  d_sink: { vb: [130, 120], b: nL('M65 42V20Q65 10 82 12V20', OL, 9) + nL('M65 42V20Q65 10 82 12V20', '#c7e6e2', 5) + nE(82, 28, 2.5, 3.5, '66b6ba', 0) + nR(8, 50, 114, 64, 8, 'e9ba85') + nL('M65 58V110') + nE(56, 84, 3.5, 3.5, 'bf865d') + nE(74, 84, 3.5, 3.5, 'bf865d') + nR(4, 40, 122, 14, 6, 'fff5dc') + nH('M16 62v40') },
+  d_chair: { vb: [80, 120], b: nR(14, 72, 9, 42, 3, 'bf865d') + nR(57, 72, 9, 42, 3, 'bf865d') + nR(16, 6, 48, 60, 10, 'e9ba85') + nL('M32 14V56M48 14V56', '#bf865d', 3) + nR(10, 60, 60, 14, 7, 'ed715c') + nH('M22 14v30') },
+  d_kettle: nL('M28 34Q50 0 72 34', OL, 5) + nP('M76 54L94 40L97 47L78 70Z', 'ed715c') + nP('M22 50Q22 30 50 30Q78 30 78 50V78Q78 90 66 90H34Q22 90 22 78Z', 'ed715c') + nE(50, 31, 22, 6, 'e89871') + nE(50, 23, 5, 5, '594552', 0) + nH('M30 50v24'),
+  d_fruit: nE(36, 42, 14, 14, 'ed715c') + nE(64, 40, 15, 15, 'f6b951') + nE(50, 32, 12, 12, '84b46f') + nL('M50 22q2 -6 8 -6', '#468774', 3) + nP('M14 52H86L76 88Q50 96 24 88Z', 'e9ba85') + nL('M20 66H80M24 78H76', '#bf865d', 2.5) + nR(10, 48, 80, 10, 5, 'bf865d'),
+  /* 침실 */
+  d_closet: { vb: [120, 150], b: nR(16, 134, 12, 12, 3, 'bf865d') + nR(92, 134, 12, 12, 3, 'bf865d') + nR(8, 6, 104, 132, 10, 'e9ba85') + nR(18, 18, 36, 108, 6, 'f6d09f') + nR(66, 18, 36, 108, 6, 'f6d09f') + nE(48, 76, 3.5, 3.5, 'bf865d') + nE(72, 76, 3.5, 3.5, 'bf865d') + nH('M26 28v40') },
+  d_drawer: { vb: [120, 100], b: nR(16, 84, 10, 12, 3, 'bf865d') + nR(94, 84, 10, 12, 3, 'bf865d') + nR(8, 14, 104, 74, 8, 'e9ba85') + nR(16, 22, 88, 26, 5, 'f6d09f') + nR(16, 54, 88, 26, 5, 'f6d09f') + nE(60, 35, 4, 4, 'ed715c') + nE(60, 67, 4, 4, 'ed715c') },
+  d_cushion: nP('M18 24Q50 14 82 24Q92 50 82 78Q50 88 18 78Q8 50 18 24Z', 'ad90c1') + nP('M50 34L55 46L68 47L58 55L61 68L50 61L39 68L42 55L32 47L45 46Z', 'ffda65') + nH('M24 34q4 -6 14 -8'),
+  d_moon: nP('M62 10A40 40 0 1 0 90 62A32 32 0 0 1 62 10Z', 'ffda65') + nP('M76 20l3 7l7 1l-5 5l1 7l-6 -4l-6 4l1 -7l-5 -5l7 -1Z', 'fff5dc') + nL('M34 48q5 5 10 0', OL, 3) + nE(32, 60, 5, 4, 'ef8191', 0),
+  d_mirror: { vb: [80, 130], b: nR(36, 96, 8, 24, 3, 'bf865d') + nE(40, 122, 20, 5, 'bf865d') + nE(40, 54, 30, 46, 'bf865d') + nE(40, 54, 23, 39, 'c7e6e2') + nH('M28 42l12 -16') + nH('M34 54l8 -10') },
+  d_toybox: { vb: [120, 100], b: nE(38, 38, 14, 14, 'ed715c') + nR(58, 20, 24, 28, 4, 'f6b951') + nE(92, 36, 10, 10, 'bf865d') + nR(10, 44, 100, 48, 8, '66b6ba') + nP('M60 54l4 9l10 1l-8 7l3 10l-9 -6l-9 6l3 -10l-8 -7l10 -1Z', 'ffda65') + nH('M18 52v30') },
+  /* 화장실 */
+  d_bath: { vb: [170, 110], b: nL('M150 36V14H136V22', OL, 9) + nL('M150 36V14H136V22', '#c7e6e2', 5) + nE(40, 98, 10, 7, 'f6b951') + nE(130, 98, 10, 7, 'f6b951') + nE(50, 26, 12, 12, 'c7e6e2') + nE(74, 20, 15, 15, 'c7e6e2') + nE(100, 26, 12, 12, 'c7e6e2') + nE(120, 24, 9, 9, 'c7e6e2') + nP('M10 40H160Q160 96 120 96H50Q10 96 10 40Z', 'fffef2') + nR(4, 32, 162, 14, 7, 'fff5dc') + nH('M22 54q2 24 22 34') },
+  d_toilet: { vb: [90, 120], b: nR(22, 6, 46, 44, 8, 'fffef2') + nE(45, 16, 6, 3.5, '66b6ba') + nP('M14 54H76Q76 84 58 88V110H32V88Q14 84 14 54Z', 'fffef2') + nE(45, 54, 34, 10, 'fff5dc') + nH('M22 64q2 12 10 18') },
+  d_basin: { vb: [100, 130], b: nL('M50 46V26Q50 16 64 18V24', OL, 9) + nL('M50 46V26Q50 16 64 18V24', '#c7e6e2', 5) + nE(64, 32, 2.5, 3.5, '66b6ba', 0) + nP('M38 70H62L58 122H42Z', 'fffef2') + nP('M10 50H90Q88 78 50 78Q12 78 10 50Z', 'fffef2') + nR(6, 44, 88, 10, 5, 'fff5dc') },
+  d_towel: nL('M8 20H92', OL, 8) + nL('M8 20H92', '#c7e6e2', 4) + nR(28, 14, 44, 70, 6, 'ef8191') + nL('M29 62H71M29 71H71', '#fff5dc', 3) + nH('M36 22v26'),
+  d_brush: nR(38, 14, 7, 46, 3, '66b6ba') + nR(36, 4, 11, 16, 3, 'fffef2') + nR(56, 18, 7, 42, 3, 'ef8191') + nR(54, 8, 11, 16, 3, 'fffef2') + nP('M26 52H74L68 92Q50 96 32 92Z', 'f6b951') + nH('M34 60l3 24'),
+  d_shampoo: { vb: [70, 120], b: nL('M35 30V14H52', OL, 5) + nR(24, 26, 22, 12, 4, 'fff5dc') + nR(12, 36, 46, 78, 12, 'ad90c1') + nE(35, 76, 14, 14, 'fff5dc') + nE(31, 78, 5, 5, 'c7e6e2', 0) + nE(40, 72, 4, 4, 'c7e6e2', 0) + nH('M20 48v30') },
+  /* 마당 */
+  d_tree: { vb: [120, 160], b: nP('M50 152L54 90H66L70 152Z', 'bf865d') + nE(32, 72, 26, 24, '468774') + nE(88, 72, 26, 24, '468774') + nE(60, 52, 42, 42, '84b46f') + nE(46, 46, 6, 6, 'ed715c') + nE(76, 60, 6, 6, 'ed715c') + nE(58, 74, 6, 6, 'ed715c') + nH('M34 36q8 -14 22 -16') },
+  d_flowers: { vb: [140, 80], b: nL('M30 66V40M70 66V30M110 66V40', '#468774', 3) + nE(70, 68, 62, 10, '84b46f') + nE(30, 34, 12, 12, 'ef8191') + nE(30, 34, 5, 5, 'ffda65', 0) + nE(70, 24, 13, 13, 'f6b951') + nE(70, 24, 5, 5, 'ed715c', 0) + nE(110, 34, 12, 12, 'ad90c1') + nE(110, 34, 5, 5, 'ffda65', 0) },
+  d_doghouse: { vb: [130, 120], b: nR(18, 50, 94, 64, 6, 'e9ba85') + nP('M46 114V86Q46 66 65 66Q84 66 84 86V114Z', '594552') + nP('M6 56L65 8L124 56Z', 'ed715c') + nR(52, 38, 26, 9, 4, 'fff5dc') + nH('M26 50L60 22') },
+  d_swing: { vb: [130, 150], b: nL('M14 144L36 12H94L116 144', OL, 11) + nL('M14 144L36 12H94L116 144', '#bf865d', 6) + nL('M50 14V96M80 14V96') + nR(40, 94, 50, 12, 5, 'ed715c') },
+  d_wcan: { vb: [120, 100], b: nL('M86 46Q114 52 86 78', OL, 5) + nL('M44 38Q60 12 76 38', OL, 5) + nP('M36 62L12 36L18 30L42 48Z', '66b6ba') + nE(12, 31, 8, 6, '87c7bd') + nR(34, 36, 52, 54, 10, '66b6ba') + nE(60, 64, 7, 7, 'ffda65', 0) + nE(5, 48, 2.5, 3.5, '66b6ba', 0) + nH('M42 46v30') },
+  d_fence: { vb: [180, 80], b: nR(4, 30, 172, 10, 4, 'fff5dc') + nR(4, 54, 172, 10, 4, 'fff5dc') + [14, 48, 82, 116, 150].map(x => nP(`M${x} 76V18L${x + 9} 6L${x + 18} 18V76Z`, 'fffef2')).join('') },
+});
+DKEYS.forEach(id => DECO[id].room = 'living');
+Object.assign(DECO, {
+  d_fridge: { n: '냉장고', w: 150, room: 'kitchen' }, d_stove: { n: '가스레인지', w: 170, room: 'kitchen' }, d_sink: { n: '싱크대', w: 190, room: 'kitchen' },
+  d_chair: { n: '의자', w: 110, room: 'kitchen' }, d_kettle: { n: '주전자', w: 90, room: 'kitchen' }, d_fruit: { n: '과일 바구니', w: 100, room: 'kitchen' },
+  d_closet: { n: '옷장', w: 190, room: 'bedroom' }, d_drawer: { n: '서랍장', w: 170, room: 'bedroom' }, d_cushion: { n: '쿠션', w: 90, room: 'bedroom' },
+  d_moon: { n: '달님', w: 120, wall: 1, room: 'bedroom' }, d_mirror: { n: '거울', w: 110, room: 'bedroom' }, d_toybox: { n: '장난감 상자', w: 150, room: 'bedroom' },
+  d_bath: { n: '욕조', w: 280, room: 'bath' }, d_toilet: { n: '변기', w: 130, room: 'bath' }, d_basin: { n: '세면대', w: 130, room: 'bath' },
+  d_towel: { n: '수건', w: 120, wall: 1, room: 'bath' }, d_brush: { n: '칫솔', w: 80, room: 'bath' }, d_shampoo: { n: '샴푸', w: 60, room: 'bath' },
+  d_tree: { n: '나무', w: 220, room: 'yard' }, d_flowers: { n: '꽃밭', w: 180, room: 'yard' }, d_doghouse: { n: '강아지 집', w: 190, room: 'yard' },
+  d_swing: { n: '그네', w: 200, room: 'yard' }, d_wcan: { n: '물뿌리개', w: 110, room: 'yard' }, d_fence: { n: '울타리', w: 240, room: 'yard' },
+});
+DKEYS.push(...Object.keys(DECO).filter(id => !DKEYS.includes(id)));
+// need: 이만큼 서로 다른 선물을 모으면 방이 열린다
+const ROOMS = [
+  { k: 'living', n: '거실', need: 0, icon: 'd_sofa' }, { k: 'kitchen', n: '주방', need: 5, icon: 'd_fridge' }, { k: 'bedroom', n: '침실', need: 11, icon: 'd_bed' },
+  { k: 'bath', n: '화장실', need: 18, icon: 'd_bath' }, { k: 'yard', n: '마당', need: 26, icon: 'd_tree' },
+];
+const ownedN = () => Object.keys(save.inv).length, isOpen = R => ownedN() >= R.need;
+let curRoom = 'living';
+function roomBg(k) {
+  const win = (x, y, w, h, sky = '#66b6ba', extra = '') => `<g transform="translate(${x} ${y})"><rect width="${w}" height="${h}" rx="6" fill="#fff5dc" stroke="#594552" stroke-width="2.5"/><rect x="3" y="3" width="${w - 6}" height="${h - 6}" rx="4" fill="${sky}"/>${extra}<path d="M${w / 2} 3v${h - 6}M3 ${h * .55}h${w - 6}" fill="none" stroke="#fff5dc" stroke-width="3"/></g>`;
+  const lines = (x0, y0, x1, y1, sx, sy, col) => { let d = ''; if (sx) for (let x = x0; x <= x1; x += sx) d += `M${x} ${y0}V${y1}`; if (sy) for (let y = y0; y <= y1; y += sy) d += `M${x0} ${y}H${x1}`; return `<path d="${d}" fill="none" stroke="${col}" stroke-width="2"/>`; };
+  const B = {
+    kitchen: `<rect width="1000" height="625" fill="#f8ebd5"/><rect y="190" width="1000" height="190" fill="#d6e4d8"/>` + lines(0, 190, 1000, 380, 48, 48, '#e7f2e9') + win(410, 40, 180, 130) + `<rect y="380" width="1000" height="245" fill="#f0dfcd"/>` + lines(0, 392, 1000, 625, 70, 70, '#deb88f') + `<rect y="380" width="1000" height="12" fill="#deb88f"/>`,
+    bedroom: `<rect width="1000" height="625" fill="#e6ced4"/>` + lines(5, 0, 1000, 380, 52, 0, '#f0dfe2') + win(90, 96, 150, 160, '#7676aa', '<circle cx="104" cy="42" r="16" fill="#ffdf88"/><circle cx="36" cy="34" r="3" fill="#fff5dc"/><circle cx="60" cy="120" r="3" fill="#fff5dc"/><circle cx="118" cy="110" r="3" fill="#fff5dc"/>') + `<rect y="380" width="1000" height="245" fill="#e1bf9a"/><rect y="380" width="1000" height="12" fill="#caa789"/>` + lines(0, 445, 1000, 625, 0, 97, '#d3ac86'),
+    bath: `<rect width="1000" height="625" fill="#c7e6e0"/>` + lines(0, 0, 1000, 380, 50, 50, '#e7f2e9') + win(790, 80, 130, 110) + `<rect y="380" width="1000" height="245" fill="#b9dedc"/>` + lines(0, 392, 1000, 625, 62, 62, '#d6e4d8') + `<rect y="380" width="1000" height="12" fill="#91c7c4"/>`,
+    yard: `<rect width="1000" height="625" fill="#c7e6e2"/><circle cx="870" cy="92" r="46" fill="#ffdf88"/><ellipse cx="200" cy="96" rx="70" ry="24" fill="#fffae9"/><ellipse cx="250" cy="76" rx="46" ry="22" fill="#fffae9"/><ellipse cx="610" cy="140" rx="60" ry="20" fill="#fffae9"/><path d="M0 340Q250 240 520 320T1000 300V420H0Z" fill="#b5ce9b"/><rect y="372" width="1000" height="253" fill="#b0cc91"/><path d="M120 440l6 -14l6 14M380 520l6 -14l6 14M700 460l6 -14l6 14M880 560l6 -14l6 14M240 580l6 -14l6 14M560 420l6 -14l6 14" fill="none" stroke="#84ac8b" stroke-width="3"/>`,
+  };
+  return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 625" stroke-linejoin="round" stroke-linecap="round">${B[k]}</svg>`)}") center / 100% 100% no-repeat`;
+}
+const roomList = () => save.rooms[curRoom] || (save.rooms[curRoom] = []);
+function drawTabs() {
+  const box = $('#rtabs'); box.innerHTML = '';
+  ROOMS.forEach(R => {
+    const open = isOpen(R), b = mkBtn('round rtab' + (R.k === curRoom ? ' cur' : '') + (open ? '' : ' lock'), svgHTML(R.icon, fitW(R.icon, 44)) + (open ? '' : `<i>🎁${R.need}</i>`));
+    b.setAttribute('aria-label', R.n);
+    b.addEventListener('click', () => {
+      if (!open) { snd.wrong(); say('선물을 더 모으면 열려요'); $('#house .bubble').textContent = `선물 ${R.need}개를 모으면 ${R.n}이 열려요`; b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); return; }
+      snd.click(); say(R.n); curRoom = R.k; drawRoom();
+    });
+    box.appendChild(b);
+  });
+}
+function drawRoom() {
+  const room = $('#room');
+  $('#house').style.background = curRoom === 'living' ? '' : roomBg(curRoom);
+  $('#house .bubble').textContent = '선물을 끌어다 집을 꾸며요';
+  room.innerHTML = curRoom === 'living' ? '<div class="win"></div>' : ''; roomList().forEach(roomItem); shelfPage = 0; drawShelf(); drawTabs();
+}
+// 아직 없는 선물부터, 그중에서도 가장 최근에 열린 방의 물건을 먼저 준다. 다 모았으면 아무거나 하나 더. opened: 이번 선물로 새로 열린 방
 function giveGift() {
-  const rest = DKEYS.filter(id => !save.inv[id]), id = rest.length ? rest[Math.floor(Math.random() * Math.min(3, rest.length))] : DKEYS[Math.floor(Math.random() * DKEYS.length)];
-  save.inv[id] = (save.inv[id] || 0) + 1; store(); return id;
+  const open = ROOMS.filter(isOpen), keys = open.map(R => R.k), rest = DKEYS.filter(id => !save.inv[id]);
+  const newest = rest.filter(id => DECO[id].room === keys[keys.length - 1]), inOpen = rest.filter(id => keys.includes(DECO[id].room));
+  const pool = newest.length && Math.random() < .7 ? newest : inOpen.length ? inOpen : rest;
+  const id = pool.length ? pool[Math.floor(Math.random() * Math.min(3, pool.length))] : DKEYS[Math.floor(Math.random() * DKEYS.length)];
+  save.inv[id] = (save.inv[id] || 0) + 1; store();
+  const now = ROOMS.filter(isOpen);
+  return { id, opened: now.length > open.length ? now[now.length - 1] : null };
 }
 
 /* ================= 놀이터 게임 ================= */
@@ -1718,7 +1820,7 @@ const GAMES = [
 
 /* ================= 우리 집 ================= */
 let shelfPage = 0;
-const leftOf = id => (save.inv[id] || 0) - save.room.filter(o => o.id === id).length;
+const leftOf = id => (save.inv[id] || 0) - Object.values(save.rooms).reduce((n, l) => n + l.filter(o => o.id === id).length, 0);
 const zOf = o => DECO[o.id].flat ? 1 : DECO[o.id].wall ? 2 : 10 + Math.round(o.y);
 function roomItem(o) {
   const node = el('ditem', svgHTML(o.id, DECO[o.id].w)); put(node, o.x, o.y); node.style.zIndex = zOf(o);
@@ -1744,9 +1846,9 @@ function dragItem(src, node, o, ev0, isNew) {
     src.removeEventListener('pointermove', mv); src.removeEventListener('pointerup', up); src.removeEventListener('pointercancel', up);
     node.classList.remove('lift');
     if (!moved && isNew) { o.x = rnd(180, 820); o.y = DECO[o.id].wall ? rnd(110, 240) : rnd(390, 460); }
-    if (moved && o.y > 512) { node.remove(); const i = save.room.indexOf(o); if (i >= 0) save.room.splice(i, 1); snd.whoosh(); }
+    if (moved && o.y > 512) { node.remove(); const l = roomList(), i = l.indexOf(o); if (i >= 0) l.splice(i, 1); snd.whoosh(); }
     else {
-      if (isNew) save.room.push(o);
+      if (isNew) roomList().push(o);
       setPos();
       if (moved || isNew) { snd.plop(); const q = center(node); sparkle(q.cx, q.cy); }
       else { say(DECO[o.id].n); tagAt(node, DECO[o.id].n); node.classList.remove('boing'); void node.offsetWidth; node.classList.add('boing'); }
@@ -1756,18 +1858,18 @@ function dragItem(src, node, o, ev0, isNew) {
   src.addEventListener('pointermove', mv); src.addEventListener('pointerup', up); src.addEventListener('pointercancel', up);
 }
 function drawShelf() {
-  const sh = $('#shelf'), ids = DKEYS.filter(id => leftOf(id) > 0), pages = Math.max(1, Math.ceil(ids.length / 9));
+  const sh = $('#shelf'), ids = DKEYS.filter(id => leftOf(id) > 0).sort((a, b) => (DECO[b].room === curRoom) - (DECO[a].room === curRoom)), pages = Math.max(1, Math.ceil(ids.length / 9));
   shelfPage %= pages; sh.innerHTML = ''; $('#shelfNext').style.display = pages > 1 ? '' : 'none';
   ids.slice(shelfPage * 9, shelfPage * 9 + 9).forEach(id => {
     const b = mkBtn('sbtn', svgHTML(id, fitW(id, 66)) + (leftOf(id) > 1 ? `<i>${leftOf(id)}</i>` : '')); sh.appendChild(b);
     b.addEventListener('pointerdown', ev => { say(DECO[id].n); const o = { id, x: 0, y: 0 }; dragItem(b, roomItem(o), o, ev, true); });
   });
 }
-function goHouse() {
+function goHouse(k) {
   teardown(); run = null; show('house');
-  const room = $('#room'); room.innerHTML = '<div class="win"></div>'; save.room.forEach(roomItem); drawShelf();
-  say('선물로 집을 꾸며요');
-  const first = $('#shelf .sbtn'); if (first && !save.room.length) hint.drag(first, room.firstChild);
+  if (k) curRoom = k;
+  drawRoom(); say('선물로 집을 꾸며요');
+  const first = $('#shelf .sbtn'); if (first && !roomList().length) hint.drag(first, $('#room'));
 }
 $('#shelfNext').addEventListener('click', () => { snd.click(); shelfPage++; drawShelf(); });
 $('#house').addEventListener('pointerdown', () => hint.clear(), true);
@@ -1777,7 +1879,7 @@ let run = null, ctx = null, busy = false;
 
 function goTown(quiet) {
   teardown(); run = null;
-  $('#giftCount').textContent = `🎁 ${Object.keys(save.inv).length} / ${DKEYS.length}`;
+  $('#giftCount').textContent = `🎁 ${ownedN()} / ${DKEYS.length}`;
   show('town'); if (!quiet) say('어디로 갈까요?');
 }
 $('#pRest span').innerHTML = svgHTML('b_rest', 280); $('#pHome span').innerHTML = svgHTML('b_home', 280); $('#pPark span').innerHTML = svgHTML('b_park', 280);
@@ -1891,7 +1993,7 @@ function finish() {
   };
 }
 function giftScene(alive) {
-  const g = $('#gift'), id = giveGift(), d = DECO[id], bub = $('#fbub'); let taps = 0;
+  const g = $('#gift'), gift = giveGift(), id = gift.id, d = DECO[id], bub = $('#fbub'); let taps = 0;
   $('#plate').innerHTML = ''; g.innerHTML = svgHTML('giftbox', 220); g.className = 'on';
   bub.textContent = '선물 상자를 톡톡 눌러요'; say('선물 상자를 톡톡 눌러요'); snd.ready(); hint.tap(g);
   g.onpointerdown = ev => {
@@ -1905,7 +2007,14 @@ function giftScene(alive) {
       const pz = $('#prize'); pz.innerHTML = `<button class="pitem">${svgHTML(id, fitW(id, 190))}</button><b>${d.n}</b>`;
       pz.firstChild.onclick = () => { snd.pick(); say(d.n); };
       bub.textContent = '와! 선물을 받았어요!'; say('와! 선물을 받았어요!');
-      setTimeout(() => { if (alive()) { say(d.n); $('#finish').classList.add('btns'); } }, 2300);
+      setTimeout(() => { if (alive()) { say(d.n); if (!gift.opened) $('#finish').classList.add('btns'); } }, 2300);
+      // 선물이 충분히 모이면 새 방이 열린다
+      if (gift.opened) setTimeout(() => {
+        if (!alive()) return;
+        const R = gift.opened; curRoom = R.k; snd.fanfare(); confetti();
+        pz.innerHTML = `<button class="pitem">${svgHTML(R.icon, fitW(R.icon, 190))}</button><b>🔓 ${R.n}</b>`; pz.firstChild.onclick = () => { snd.pick(); say(R.n); };
+        bub.textContent = '새 방이 열렸어요!'; say('새 방이 열렸어요!'); $('#finish').classList.add('btns');
+      }, 4600);
     }, 450);
   };
 }
