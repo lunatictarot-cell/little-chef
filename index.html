@@ -160,6 +160,42 @@ button{font-family:inherit;border:0;cursor:pointer;padding:0}
 .rolls.on{display:block}
 .rolls .sl{position:absolute;line-height:0;transform:translate(-50%,-50%);animation:pop .4s both;filter:drop-shadow(0 5px 0 rgba(0,0,0,.12))}
 
+/* 미니 게임 */
+.tag.up{transform:translate(-50%,-100%)}
+.fix{position:absolute;line-height:0;pointer-events:none}
+.mgstars{position:absolute;left:150px;top:90px;font-size:36px;z-index:6}
+.mgstars i{font-style:normal;display:inline-block;margin-right:4px;filter:grayscale(1) opacity(.3)}
+.mgstars i.on{filter:none;animation:pop .35s}
+.cbtn{position:absolute;width:132px;height:132px;border-radius:36px;background:#fff;box-shadow:0 7px 0 #e9d3a0;display:flex;align-items:center;justify-content:center;line-height:0}
+.cbtn svg{pointer-events:none}
+.cbtn:active{scale:.94}
+.cbtn.bare{background:none;box-shadow:none}
+.cbtn.no{animation:no .4s}
+@keyframes no{25%{translate:-10px 0}50%{translate:10px 0}75%{translate:-6px 0}}
+.cbtn.glow{animation:pulse .7s ease-in-out infinite;filter:drop-shadow(0 0 10px #ffc400) drop-shadow(0 0 4px #ffc400)}
+.sil{position:absolute;line-height:0;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 2px #fff);animation:pulse 1.2s ease-in-out infinite}
+.sil svg{filter:brightness(0) opacity(.5)}
+.sil.show{animation:pop .35s}
+.sil.show svg{filter:none}
+.peek{position:absolute;display:flex;line-height:0;width:240px;justify-content:center}
+.peek>*{margin:0 -8px;animation:pop .3s}
+.awning{position:absolute;left:412px;top:92px;width:576px;height:66px;border-radius:14px 14px 30px 30px;background:repeating-linear-gradient(90deg,#ff8f5e 0 48px,#fff3d0 48px 96px);box-shadow:0 6px 0 rgba(0,0,0,.14);z-index:3}
+.shelf{position:absolute;left:430px;top:146px;width:540px;height:446px;border:12px solid #a8743f;border-radius:12px;background:linear-gradient(#a8743f,#a8743f) 0 50%/100% 12px no-repeat,repeating-linear-gradient(90deg,#74512f 0 84px,#6b4a2b 84px 88px);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;place-items:center;padding-top:14px}
+.shelf .cbtn{position:static}
+.note{position:absolute;width:180px;height:180px;border-radius:28px;background:#fff;box-shadow:0 7px 0 rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;rotate:-4deg;line-height:0}
+.note:before{content:"📌";position:absolute;top:-22px;left:74px;font-size:34px;line-height:1}
+.note.pop{animation:pop .35s}
+.trayBig{position:absolute;left:150px;top:96px;width:820px;height:310px;border-radius:50px;background:#fff;box-shadow:inset 0 0 0 12px #dfeaf5,0 8px 0 rgba(0,0,0,.08)}
+.mplate{position:absolute;width:190px;height:190px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 12px #dfeaf5,0 8px 0 rgba(0,0,0,.08)}
+.mplate>*{position:absolute;line-height:0;transform:translate(-50%,-50%);animation:pop .3s}
+.mplate .want{opacity:.25;animation:none}
+.cboard{position:absolute;width:440px;height:400px;border-radius:40px;background:#e9bd7c;box-shadow:inset 0 0 0 12px #d9a65c,0 10px 0 rgba(0,0,0,.08)}
+.cboard .it{position:absolute;left:110px;top:90px;line-height:0;pointer-events:none}
+.cboard .it svg{transition:clip-path .12s}
+.knife{position:absolute;left:290px;top:10px;font-size:120px;line-height:1;pointer-events:none}
+.knife.cut{animation:cut .22s}
+@keyframes cut{50%{transform:translate(-40px,110px) rotate(-30deg)}}
+
 /* 메뉴 8종 배치 */
 #menu h2{top:16px;font-size:40px}
 #cards{top:76px;flex-wrap:wrap;gap:16px 20px}
@@ -342,6 +378,8 @@ const snd = (() => {
     star(i) { tone(hz(84 + i * 4), hz(84 + i * 4), .5, 'sine', .3); tone(hz(96 + i * 4), hz(96 + i * 4), .35, 'sine', .12, .05); },
     fanfare() { arp([72, 72, 72, 76, 79, 84], .13, .3, .26, 'square'); arp([84, 88, 91, 96], .09, .5, .2, 'triangle'); },
     nom() { tone(260, 150, .1, 'square', .16); tone(220, 130, .1, 'square', .16, .14); },
+    wrong() { tone(330, 220, .16, 'sine', .18); },
+    chop() { noise(.06, 2200, .3, 0, 2); tone(180, 90, .08, 'square', .14); },
     pour() { for (let i = 0; i < 10; i++) tone(rnd(400, 700), rnd(800, 1200), .09, 'sine', .12, i * .12); },
   };
 })();
@@ -1005,6 +1043,149 @@ const RECIPES = {
   },
 };
 
+/* ================= 미니 게임 (요리 전 재료 준비) ================= */
+Object.assign(A, {
+  carrot: p('M50 36Q40 12 30 16M50 36V8M50 36Q60 12 70 16', '', '#4f9e32', 7) + p('M50 94Q28 62 32 40Q50 26 68 40Q72 62 50 94Z', '#ff8a3c', '#d9641a') + p('M40 52H50M52 66H60M42 76H48', '', '#d9641a', 3) + hl('M38 46Q38 40 44 38', 4),
+  cuke: `<g transform="rotate(-35 50 50)">` + r(8, 34, 84, 32, 16, '#6cc04a', '#3f8f2a') + [26, 42, 58, 74].map(x => c(x, 50, 2.5, '#3f8f2a')).join('') + hl('M20 42H60', 4) + '</g>',
+  gimp: r(18, 18, 64, 64, 8, '#2f4a35', '#1d3023', 4, -8) + p('M30 34H52M40 50H68M32 66H56', '', '#3b5c43', 3),
+  basket: { vb: [300, 240], b: p('M60 110Q150 -44 240 110', '', '#b9813a', 14) + p('M30 100H270L246 226Q244 236 232 236H68Q56 236 54 226Z', '#e9b565', '#b9813a', 6) + p('M40 146H260M48 190H252M90 110L100 232M150 110V234M210 110L200 232', '', '#c9934a', 5) + r(18, 88, 264, 28, 14, '#f2c67a', '#b9813a', 6) },
+  bag: { vb: [220, 260], b: p('M76 44Q110 -16 144 44', '', '#c9a15e', 9) + p('M20 60L50 34H170L200 60Z', '#e9c88e', '#c9a15e', 6) + p('M20 60H200L190 250H30Z', '#f3d6a4', '#c9a15e', 6) + p('M110 150Q84 126 96 112Q106 104 110 118Q114 104 124 112Q136 126 110 150Z', '#ff8f8f') },
+});
+const FOOD = { tomato: '토마토', mozz: '치즈', mush: '버섯', pepper: '피망', pep: '페퍼로니', corn: '옥수수', olive: '올리브', pine: '파인애플', patty: '고기', cheese: '치즈', lettuce: '상추', bacon: '베이컨', egg: '달걀 프라이', onion: '양파', pickle: '피클', eggw: '달걀', milk: '우유', butter: '버터', flour: '밀가루', honey: '꿀', choco: '초콜릿', berry: '딸기', cherry: '체리', banana: '바나나', orange: '오렌지', kiwi: '키위', blue: '블루베리', melon: '수박', peach: '복숭아', mango: '망고', cookie: '쿠키', wafer: '과자', marsh: '마시멜로', carrot: '당근', cuke: '오이', rice_w: '밥', gimp: '김', syrup: '시럽' };
+const MG_FOODS = {
+  pizza: ['tomato', 'mozz', 'mush', 'pepper', 'pep', 'corn', 'olive', 'pine'],
+  burger: ['patty', 'cheese', 'lettuce', 'tomato', 'bacon', 'egg', 'onion', 'pickle'],
+  cupcake: ['eggw', 'milk', 'butter', 'flour', 'honey', 'choco', 'berry', 'cherry'],
+  juice: ['berry', 'banana', 'orange', 'kiwi', 'blue', 'melon', 'peach', 'mango'],
+  icecream: ['milk', 'berry', 'cherry', 'cookie', 'choco', 'banana', 'wafer', 'blue'],
+  donut: ['flour', 'eggw', 'milk', 'butter', 'honey', 'choco', 'berry', 'marsh'],
+  kimbap: ['carrot', 'cuke', 'eggw', 'rice_w', 'gimp', 'cheese', 'corn', 'mush'],
+  pancake: ['eggw', 'milk', 'flour', 'butter', 'berry', 'banana', 'blue', 'syrup'],
+};
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const mkBtn = (cls, html) => { const b = document.createElement('button'); b.className = cls; b.innerHTML = html || ''; return b; };
+const put = (node, x, y) => { node.style.left = x + 'px'; node.style.top = y + 'px'; return node; };
+function tagAt(node, name) {
+  stage.querySelectorAll('.tag').forEach(t => t.remove());
+  const b = node.getBoundingClientRect(), q = toStage(b.left + b.width / 2, b.top), t = el('tag up'); t.textContent = name;
+  put(t, q.x, q.y - 6); stage.appendChild(t); setTimeout(() => t.remove(), 1400);
+}
+// 진행 별: 한 판을 마칠 때마다 하나씩 켜진다. 모두 켜지면 true
+function mgStars(ctx, n) {
+  const d = el('mgstars', '<i>⭐</i>'.repeat(n)); ctx.area.appendChild(d); let k = 0;
+  return () => { d.children[k].classList.add('on'); snd.star(Math.min(k, 2)); hop(); return ++k >= n; };
+}
+// 고르기: 톡 누르거나 목표까지 끌어다 놓는다. 맞으면 날아가 담기고, 아니면 살짝 흔들리고 제자리로 (틀렸다는 표시는 없음)
+function choice(ctx, btn, id, o) {
+  btn.addEventListener('pointerdown', ev0 => {
+    ev0.preventDefault(); if (btn.dataset.off || !ctx.alive) return;
+    snd.pick(); say(FOOD[id]); tagAt(btn, FOOD[id]);
+    const g = el('ing ghost', svgHTML(id, 96)); stage.appendChild(g); btn.style.opacity = .35;
+    const sx = ev0.clientX, sy = ev0.clientY; let moved = false;
+    const move = (cx, cy) => { const q = toStage(cx, cy); put(g, q.x, q.y); };
+    move(sx, sy);
+    try { btn.setPointerCapture(ev0.pointerId); } catch (err) {}
+    const back = () => { g.classList.add('fly'); const q = center(btn); move(q.cx, q.cy); setTimeout(() => { g.remove(); btn.style.opacity = ''; }, 370); };
+    const onMove = ev => { if (ev.pointerId !== ev0.pointerId) return; if (Math.hypot(ev.clientX - sx, ev.clientY - sy) > 14 * S) moved = true; move(ev.clientX, ev.clientY); };
+    const onUp = ev => {
+      if (ev.pointerId !== ev0.pointerId) return;
+      btn.removeEventListener('pointermove', onMove); btn.removeEventListener('pointerup', onUp); btn.removeEventListener('pointercancel', onUp);
+      const t = o.target.getBoundingClientRect(), m = 30 * S;
+      const over = ev.clientX > t.left - m && ev.clientX < t.right + m && ev.clientY > t.top - m && ev.clientY < t.bottom + m;
+      if (ev.type !== 'pointerup' || (moved && !over)) return back();
+      if (!o.isRight()) { snd.wrong(); back(); btn.classList.remove('no'); void btn.offsetWidth; btn.classList.add('no'); o.onWrong && o.onWrong(); return; }
+      btn.dataset.off = 1; g.classList.add('fly'); const q = center(o.target); move(q.cx, q.cy);
+      setTimeout(() => { g.remove(); if (!ctx.alive) return; snd.plop(); sparkle(q.cx, q.cy); o.onRight(); }, 370);
+    };
+    btn.addEventListener('pointermove', onMove); btn.addEventListener('pointerup', onUp); btn.addEventListener('pointercancel', onUp);
+  });
+}
+
+const MINI = [
+  { text: '🧺 그림자를 보고 바구니에 담아요', say: '누구 그림자일까? 바구니에 담아요',
+    setup(ctx, ids) {
+      const star = mgStars(ctx, 4), rounds = shuffle(ids).slice(0, 4);
+      const peek = put(el('peek'), 380, 128), basket = put(el('fix', svgHTML('basket', 300)), 350, 120), sil = put(el('sil'), 440, 248), row = el('');
+      ctx.area.append(peek, basket, sil, row);
+      let k = 0;
+      (function round() {
+        const want = rounds[k], opts = shuffle([want].concat(shuffle(ids.filter(x => x !== want)).slice(0, 2))); let miss = 0;
+        sil.className = 'sil'; sil.innerHTML = svgHTML(want, 120); row.innerHTML = '';
+        opts.forEach((id, i) => {
+          const b = put(mkBtn('cbtn', svgHTML(id, 96)), 254 + i * 180, 448); row.appendChild(b);
+          choice(ctx, b, id, { target: sil, isRight: () => id === want,
+            onWrong() { if (++miss >= 2) row.children[opts.indexOf(want)].classList.add('glow'); },
+            onRight() {
+              b.style.visibility = 'hidden'; sil.className = 'sil show'; snd.ready();
+              setTimeout(() => { if (!ctx.alive) return; const s = el('', svgHTML(want, 70)); peek.appendChild(s); if (star()) return ctx.finish(); k++; round(); }, 800);
+            } });
+        });
+        if (!k) hint.drag(row.children[opts.indexOf(want)], sil);
+      })();
+    } },
+  { text: '🛒 쪽지에 그려진 것을 사요', say: '쪽지에 그려진 것을 찾아서 담아요',
+    setup(ctx, ids) {
+      const star = mgStars(ctx, 4), six = shuffle(ids).slice(0, 6), wants = shuffle(six).slice(0, 4);
+      const note = put(el('note'), 176, 150), bag = put(el('fix', svgHTML('bag', 190)), 180, 350), shelf = el('shelf');
+      ctx.area.append(el('awning'), shelf, note, bag);
+      let k = 0, miss = 0; const btns = {};
+      const ask = () => { miss = 0; note.innerHTML = svgHTML(wants[k], 120); note.classList.remove('pop'); void note.offsetWidth; note.classList.add('pop'); if (k) setTimeout(() => ctx.alive && say(FOOD[wants[k]] + ' 주세요'), 500); };
+      six.forEach(id => {
+        const b = btns[id] = mkBtn('cbtn bare', svgHTML(id, 110)); shelf.appendChild(b);
+        choice(ctx, b, id, { target: bag, isRight: () => id === wants[k],
+          onWrong() { if (++miss >= 2) btns[wants[k]].classList.add('glow'); },
+          onRight() { b.style.visibility = 'hidden'; if (star()) return ctx.finish(); k++; ask(); } });
+      });
+      ask(); hint.drag(btns[wants[0]], bag);
+    } },
+  { text: '🍽️ 접시와 같은 것을 모두 모아요', say: '접시에 그려진 것과 같은 것을 모두 모아요',
+    setup(ctx, ids) {
+      const kinds = shuffle(ids).slice(0, 3), star = mgStars(ctx, 3), all = shuffle(kinds.concat(kinds, kinds, kinds));
+      const plate = put(el('mplate'), 470, 418);
+      ctx.area.append(el('trayBig'), plate);
+      let k = 0, got = 0; const btns = [];
+      const ask = () => { got = 0; plate.innerHTML = `<div class="want" style="left:50%;top:50%">${svgHTML(kinds[k], 110)}</div>`; if (k) say(FOOD[kinds[k]] + ' 모두 찾아요'); };
+      all.forEach((id, i) => {
+        const b = put(mkBtn('cbtn bare', svgHTML(id, 96)), 176 + (i % 6) * 130 + rnd(-12, 12), 112 + Math.floor(i / 6) * 140 + rnd(-8, 8));
+        b.style.rotate = rnd(-18, 18) + 'deg'; b.dataset.id = id; btns.push(b); ctx.area.appendChild(b);
+        choice(ctx, b, id, { target: plate, isRight: () => id === kinds[k],
+          onRight() {
+            b.style.visibility = 'hidden';
+            const s = el('', svgHTML(id, 64)); put(s, 60 + (got % 2) * 70 + rnd(-8, 8), 60 + Math.floor(got / 2) * 66 + rnd(-8, 8)); plate.appendChild(s);
+            if (++got < 4) return;
+            const done = star();
+            setTimeout(() => { if (!ctx.alive) return; if (done) return ctx.finish(); k++; ask(); }, 700);
+          } });
+      });
+      ask(); hint.drag(btns.find(b => b.dataset.id === kinds[0]), plate);
+    } },
+  { text: '🔪 도마 위에서 탁탁 썰어요', say: '도마를 톡톡 눌러서 탁탁 썰어요',
+    setup(ctx, ids) {
+      const three = shuffle(ids).slice(0, 3), star = mgStars(ctx, 3);
+      const board = put(el('cboard', '<div class="it"></div><div class="knife">🔪</div>'), 190, 140), plate = put(el('mplate'), 700, 300);
+      ctx.area.append(board, plate);
+      const it = board.firstChild, knife = board.lastChild; let k = 0, cuts = 0, lock = false;
+      const show = () => { cuts = 0; lock = false; it.innerHTML = svgHTML(three[k], 220); it.firstChild.style.clipPath = ''; if (k) { say(FOOD[three[k]]); tagAt(it, FOOD[three[k]]); } };
+      board.addEventListener('pointerdown', ev => {
+        ev.preventDefault(); if (lock || !ctx.alive) return;
+        cuts++; snd.chop(); knife.classList.remove('cut'); void knife.offsetWidth; knife.classList.add('cut');
+        it.firstChild.style.clipPath = `inset(0 ${cuts * 20}% 0 0)`;
+        const n = k * 5 + cuts - 1, s = el('', svgHTML(three[k], 46)); put(s, 38 + (n % 4) * 38 + rnd(-5, 5), 44 + Math.floor(n / 4) * 34 + rnd(-5, 5)); plate.appendChild(s);
+        const q = center(it); sparkle(q.cx, q.cy, ['✨']);
+        if (cuts < 5) return;
+        lock = true; const done = star();
+        setTimeout(() => { if (!ctx.alive) return; if (done) return ctx.finish(); k++; show(); }, 600);
+      });
+      show(); hint.tap(board);
+    } },
+];
+let mgTurn = Math.floor(Math.random() * MINI.length);
+// 요리마다 다른 미니 게임이 돌아가며 나온다
+function miniStep(key) {
+  const m = MINI[mgTurn++ % MINI.length];
+  return { text: m.text, say: m.say, noTray: true, setup: ctx => m.setup(ctx, MG_FOODS[key]) };
+}
+
 /* ================= 진행 ================= */
 let run = null, ctx = null, busy = false;
 const made = (() => { try { return JSON.parse(localStorage.getItem('littleChefMade')) || {}; } catch (e) { return {}; } })();
@@ -1021,21 +1202,21 @@ function buildMenu() {
 function goMenu() { teardown(); run = null; buildMenu(); show('menu'); }
 function teardown() {
   if (ctx) ctx.alive = false; ctx = null; busy = false;
-  hint.clear(); stage.querySelectorAll('.ghost').forEach(g => g.remove());
+  hint.clear(); stage.querySelectorAll('.ghost,.tag').forEach(g => g.remove());
   $('#check').classList.remove('on');
 }
 function start(key) {
   const R = RECIPES[key];
-  run = { key, R, i: 0, state: {}, dish: R.makeDish() };
+  run = { key, R, i: 0, state: {}, dish: R.makeDish(), steps: [miniStep(key)].concat(R.steps) };
   show('play'); step();
 }
 function step() {
   teardown();
-  const { R, i } = run;
-  if (i >= R.steps.length) return finish();
-  const st = R.steps[i];
+  const { steps, i } = run;
+  if (i >= steps.length) return finish();
+  const st = steps[i];
   $('#banner').textContent = st.text;
-  $('#dots').innerHTML = R.steps.map((_, k) => `<i class="${k < i ? 'done' : k === i ? 'on' : ''}"></i>`).join('') + '<i></i>';
+  $('#dots').innerHTML = steps.map((_, k) => `<i class="${k < i ? 'done' : k === i ? 'on' : ''}"></i>`).join('') + '<i></i>';
   const area = $('#area'), tray = $('#tray'); area.innerHTML = ''; tray.innerHTML = ''; tray.style.display = st.noTray ? 'none' : '';
   run.dish.style.top = '';
   ctx = { alive: true, area, tray, dish: run.dish, state: run.state, shown: false,
@@ -1046,7 +1227,7 @@ function step() {
 }
 function complete() {
   if (busy || !ctx) return; busy = true;
-  const st = run.R.steps[run.i]; hint.clear(); $('#check').classList.remove('on');
+  const st = run.steps[run.i]; hint.clear(); $('#check').classList.remove('on');
   st.onCheck && st.onCheck(ctx);
   setTimeout(praise, st.onCheck ? 450 : 0);
   const mine = ctx;
