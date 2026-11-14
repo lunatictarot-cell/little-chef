@@ -65,26 +65,28 @@ button{font-family:inherit;border:0;cursor:pointer;padding:0}
 @keyframes hop{0%,100%{translate:0 0}40%{translate:0 -22px}}
 
 /* 재료 */
-.ing{font-size:60px;line-height:1;display:block;pointer-events:none}
-.ing.sw{width:66px;height:66px;border-radius:46% 54% 50% 50%/55% 48% 52% 45%;box-shadow:inset -6px -8px 0 rgba(0,0,0,.08),inset 6px 6px 0 rgba(255,255,255,.35);font-size:34px;line-height:66px;text-align:center}
-.ing.pep{width:66px;height:66px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#f7a48f 0 9%,transparent 10%),radial-gradient(circle at 66% 40%,#f7a48f 0 7%,transparent 8%),radial-gradient(circle at 45% 70%,#f7a48f 0 10%,transparent 11%),#dd5a45;border:4px solid #b9392a}
-.ing.patty{width:70px;height:38px;border-radius:19px;background:#7a4424;border:4px solid #5c2f16}
+.art{display:block;overflow:visible}
+.art *{stroke-linejoin:round;stroke-linecap:round}
+.ing{display:block;pointer-events:none;line-height:0}
 .ghost{position:absolute;z-index:50;transform:translate(-50%,-50%) scale(1.25);filter:drop-shadow(0 10px 6px rgba(0,0,0,.2))}
 .ghost.fly{transition:left .36s cubic-bezier(.3,.8,.4,1),top .36s cubic-bezier(.3,.8,.4,1)}
-.placed{position:absolute;transform:translate(-50%,-50%) rotate(var(--r,0deg));animation:pop .28s}
+.placed{position:absolute;line-height:0;transform:translate(-50%,-50%) rotate(var(--r,0deg));animation:pop .28s;filter:drop-shadow(0 3px 0 rgba(0,0,0,.13))}
 @keyframes pop{0%{scale:.2}70%{scale:1.25}100%{scale:1}}
+.tag{position:absolute;z-index:65;transform:translate(-100%,-50%);background:#7a4b1e;color:#fff;font-size:30px;padding:8px 20px;border-radius:24px;white-space:nowrap;pointer-events:none;animation:tag 1.4s forwards}
+@keyframes tag{0%{opacity:0;scale:.6}12%{opacity:1;scale:1.08}20%{scale:1}80%{opacity:1}100%{opacity:0}}
 
 /* 요리 상자 */
 .dish{position:absolute;width:400px;height:400px;margin:-200px 0 0 -200px}
+.dish>svg.base{position:absolute;left:0;top:0}
 .tops{position:absolute;inset:0;pointer-events:none}
 .board{position:absolute;left:150px;top:120px;width:460px;height:460px;border-radius:50%;background:#e9bd7c;box-shadow:inset 0 0 0 12px #d9a65c,0 10px 0 rgba(0,0,0,.08)}
 
 /* 피자 */
-.dough{position:absolute;inset:10px;border-radius:50%;background:#f8e2b0;border:24px solid #eab968;box-shadow:inset 0 0 0 4px rgba(255,255,255,.4);transition:all .8s}
+.board.plate{background:#fff;box-shadow:inset 0 0 0 12px #e3ebf4,0 10px 0 rgba(0,0,0,.08)}
 .sauce{position:absolute;left:38px;top:38px;width:324px;height:324px;border-radius:50%}
-.baked .dough{border-color:#cf8f3e;background:#f2cd84}
+.baked>svg.base{filter:saturate(1.3) brightness(.9)}
 .baked .sauce{filter:brightness(.92) saturate(1.15)}
-.baked .tops{filter:saturate(1.2) brightness(.95)}
+.baked .tops{filter:saturate(1.15) brightness(.96)}
 
 /* 오븐/버튼/게이지 */
 .oven{position:absolute;left:110px;top:150px;width:590px;height:410px;border-radius:44px;background:#ff9f68;box-shadow:inset 0 -14px 0 #ec7f48,0 12px 0 rgba(0,0,0,.08)}
@@ -100,26 +102,19 @@ button{font-family:inherit;border:0;cursor:pointer;padding:0}
 .steam{position:absolute;font-size:50px;animation:steam 1.2s ease-out forwards;pointer-events:none}
 @keyframes steam{0%{opacity:0;translate:0 0}30%{opacity:.9}100%{opacity:0;translate:0 -90px}}
 
-/* 햄버거 */
+/* 프라이팬 */
 .pan{position:absolute;left:230px;top:180px;width:350px;height:350px;border-radius:50%;background:#555e6b;border:18px solid #353c47;box-shadow:0 12px 0 rgba(0,0,0,.1)}
 .pan:before{content:"";position:absolute;left:-200px;top:140px;width:200px;height:44px;border-radius:22px;background:#8a5a34}
-.pan .raw{position:absolute;left:60px;top:60px;width:194px;height:194px;border-radius:48% 52% 50% 50%;border:8px solid rgba(0,0,0,.18)}
+.pan.oil{background:radial-gradient(circle,#ffd766 0,#f3bd3f 100%)}
+.pan .raw{position:absolute;left:52px;top:52px;width:210px;height:210px;border-radius:48% 52% 50% 50%;border:8px solid rgba(0,0,0,.18);box-shadow:inset 14px 14px 0 rgba(255,255,255,.14)}
+.pan .raw.flip{animation:flip .7s}
+@keyframes flip{0%,100%{transform:none}50%{transform:translateY(-70px) scaleY(.05)}}
+
+/* 쌓기 */
 .bplate{position:absolute;left:20px;bottom:24px;width:360px;height:52px;border-radius:50%;background:#fff;box-shadow:inset 0 -8px 0 #dfe6ee,0 6px 0 rgba(0,0,0,.08)}
 .stack{position:absolute;left:50%;bottom:52px;transform:translateX(-50%);display:flex;flex-direction:column-reverse;align-items:center}
-.stack>*{margin-bottom:-4px;animation:drop .3s}
+.stack>*{position:relative;line-height:0;animation:drop .3s}
 @keyframes drop{0%{translate:0 -70px;opacity:0}70%{translate:0 4px}100%{translate:0 0}}
-.bun-b{width:250px;height:44px;border-radius:12px 12px 28px 28px;background:#e9a851;border:4px solid #c9832f}
-.bun-t{width:250px;height:84px;border-radius:125px 125px 16px 16px/84px 84px 16px 16px;border:4px solid #c9832f;background:radial-gradient(ellipse 8px 5px at 30% 35%,#fff3d0 98%,transparent),radial-gradient(ellipse 8px 5px at 50% 22%,#fff3d0 98%,transparent),radial-gradient(ellipse 8px 5px at 70% 38%,#fff3d0 98%,transparent),radial-gradient(ellipse 8px 5px at 42% 52%,#fff3d0 98%,transparent),radial-gradient(ellipse 8px 5px at 62% 60%,#fff3d0 98%,transparent),#e9a851}
-.ly{border-radius:14px}
-.ly-patty{width:256px;height:32px;background:#7a4424;border:4px solid #5c2f16;border-radius:16px}
-.ly-cheese{width:268px;height:14px;background:#ffcb3d;border-radius:4px;transform:skewX(-8deg)}
-.ly-lettuce{width:280px;height:20px;background:radial-gradient(circle at 10px 16px,#8fdc68 9px,transparent 10px) 0 0/20px 20px repeat-x,#6cc24a;border-radius:10px}
-.ly-tomato{width:236px;height:18px;background:#ee4b36;border:3px solid #c9301f}
-.ly-bacon{width:270px;height:14px;background:repeating-linear-gradient(90deg,#c84f3a 0 24px,#f2b8a2 24px 34px);border-radius:7px}
-.ly-egg{width:230px;height:16px;background:#fff;border:3px solid #eee3cf;position:relative}
-.ly-egg:after{content:"";position:absolute;left:84px;top:-12px;width:56px;height:22px;border-radius:28px 28px 0 0;background:#ffc21a}
-.ly-onion{width:244px;height:12px;background:#ecd6f3;border:3px solid #c9a4d8}
-.ly-pickle{width:220px;height:12px;background:#a5c93f;border:3px solid #7f9f26}
 
 /* 컵케이크 */
 .bowl{position:absolute;left:190px;top:160px;width:390px;height:390px;border-radius:50%;background:#7cc8f5;box-shadow:inset 0 0 0 10px #a8dcfb,0 12px 0 rgba(0,0,0,.08)}
@@ -127,20 +122,16 @@ button{font-family:inherit;border:0;cursor:pointer;padding:0}
 .bowl .batter{position:absolute;inset:8px;border-radius:50%;opacity:0;background:conic-gradient(var(--b1),var(--b2),var(--b1),var(--b2),var(--b1))}
 .spoon{position:absolute;font-size:110px;transform:translate(-30%,-80%);pointer-events:none;z-index:40}
 .cwrap{position:absolute;left:105px;bottom:36px;width:190px;height:130px;clip-path:polygon(0 0,100% 0,84% 100%,16% 100%);background:repeating-linear-gradient(90deg,#ff8fb1 0 16px,#ffc2d4 16px 32px)}
-.ccake{position:absolute;left:88px;bottom:156px;width:224px;height:110px;border-radius:112px 112px 26px 26px/90px 90px 26px 26px;background:var(--batter,#f6dc9c);transform-origin:50% 100%;transform:scaleY(var(--rise,.3));box-shadow:inset 0 -10px 0 rgba(0,0,0,.08)}
+.ccake{position:absolute;left:88px;bottom:156px;width:224px;height:110px;border-radius:112px 112px 26px 26px/90px 90px 26px 26px;background:var(--batter,#f6dc9c);transform-origin:50% 100%;transform:scaleY(var(--rise,.3));box-shadow:inset 0 -10px 0 rgba(0,0,0,.08),inset 14px 10px 0 rgba(255,255,255,.18)}
 .baked .ccake{filter:brightness(.9) saturate(1.2)}
-.frost{position:absolute;left:0;right:0;bottom:214px;height:160px;display:none}
+.frost{position:absolute;left:70px;bottom:204px;display:none}
 .frost.on{display:block;animation:pop .3s}
-.frost i{position:absolute;left:50%;transform:translateX(-50%);border-radius:50%;background:var(--frost);box-shadow:inset 0 -10px 0 rgba(0,0,0,.08),inset 10px 8px 0 rgba(255,255,255,.3)}
-.frost i:nth-child(1){bottom:0;width:240px;height:74px}
-.frost i:nth-child(2){bottom:48px;width:176px;height:64px}
-.frost i:nth-child(3){bottom:92px;width:108px;height:56px}
 
 /* 주스 */
 .jarLid{position:absolute;left:300px;top:128px;width:200px;height:30px;border-radius:14px 14px 4px 4px;background:#7b8ad6}
 .jar{position:absolute;left:270px;top:156px;width:260px;height:290px;clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);background:rgba(255,255,255,.7)}
 .jar .liq{position:absolute;left:0;right:0;bottom:0;height:0}
-.jar .fr{position:absolute;font-size:62px;transform:translate(-50%,-50%);animation:drop .3s}
+.jar .fr{position:absolute;line-height:0;transform:translate(-50%,-50%);animation:drop .3s}
 .jarBase{position:absolute;left:262px;top:440px;width:276px;height:96px;border-radius:26px 26px 34px 34px;background:#7b8ad6;box-shadow:inset 0 -12px 0 #5c6bbd}
 .jarBase:after{content:"";position:absolute;left:113px;top:22px;width:50px;height:50px;border-radius:50%;background:#fff}
 .shake{animation:shake .12s linear infinite}
@@ -152,6 +143,32 @@ button{font-family:inherit;border:0;cursor:pointer;padding:0}
 .glass .liq{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--juice,#ffb13b);transition:height 1.4s ease-out}
 .glass .liq:before{content:"";position:absolute;left:0;right:0;top:0;height:16px;background:rgba(255,255,255,.45)}
 .glass:after{content:"";position:absolute;left:40px;top:20px;width:16px;height:200px;border-radius:8px;background:rgba(255,255,255,.55)}
+
+/* 아이스크림 */
+.cone{position:absolute;left:125px;bottom:0}
+.dish.ice .stack{bottom:185px}
+
+/* 도넛 */
+.glaze{position:absolute;left:0;top:0;width:400px;height:400px;-webkit-mask:radial-gradient(circle at 50% 50%,transparent 64px,#000 66px,#000 164px,transparent 166px);mask:radial-gradient(circle at 50% 50%,transparent 64px,#000 66px,#000 164px,transparent 166px)}
+
+/* 김밥 */
+.mat{position:absolute;left:150px;top:130px;width:460px;height:440px;border-radius:24px;background:repeating-linear-gradient(0deg,#a9d274 0 14px,#8fbf58 14px 18px);box-shadow:0 10px 0 rgba(0,0,0,.08)}
+.sheet{position:absolute;left:20px;top:50px;width:360px;height:300px;transform-origin:50% 100%}
+.sheet>svg{position:absolute;left:0;top:0}
+.rice{position:absolute;left:15px;top:36px;width:330px;height:250px;border-radius:14px}
+.rolls{position:absolute;inset:0;display:none}
+.rolls.on{display:block}
+.rolls .sl{position:absolute;line-height:0;transform:translate(-50%,-50%);animation:pop .4s both;filter:drop-shadow(0 5px 0 rgba(0,0,0,.12))}
+
+/* 메뉴 8종 배치 */
+#menu h2{top:16px;font-size:40px}
+#cards{top:76px;flex-wrap:wrap;gap:16px 20px}
+.card{width:205px;height:214px;font-size:28px;border-radius:32px}
+.card .big{height:140px;display:flex;align-items:center;justify-content:center;font-size:0;line-height:0}
+.card .made{left:auto;bottom:auto;right:14px;top:10px;font-size:18px}
+#menu .bunny{left:36px;top:526px;width:92px}
+#menu .bubble{left:140px;top:548px;font-size:24px;padding:8px 18px}
+#title .foods{line-height:0;display:flex;gap:14px;justify-content:center;top:236px}
 
 /* 연출 */
 #hand{position:absolute;left:0;top:0;font-size:72px;z-index:70;pointer-events:none;display:none;filter:drop-shadow(0 6px 4px rgba(0,0,0,.25))}
@@ -414,20 +431,164 @@ $('#finish').addEventListener('pointerdown', () => hint.stop(), true);
 /* ================= 화면 전환 ================= */
 function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id)); }
 
+/* ================= 그림 (SVG 일러스트) ================= */
+const sw = (s, w) => s ? ` stroke="${s}" stroke-width="${w}"` : '';
+const rt = (a, x, y) => a ? ` transform="rotate(${a} ${x} ${y})"` : '';
+const c = (x, y, q, f, s, w = 4) => `<circle cx="${x}" cy="${y}" r="${q}" fill="${f}"${sw(s, w)}/>`;
+const e = (x, y, rx, ry, f, s, w = 4, a = 0) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${f}"${sw(s, w)}${rt(a, x, y)}/>`;
+const r = (x, y, w, h, rx, f, s, k = 4, a = 0) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${f}"${sw(s, k)}${rt(a, x + w / 2, y + h / 2)}/>`;
+const p = (d, f, s, w = 4, x = '') => `<path d="${d}" fill="${f || 'none'}"${sw(s, w)} ${x}/>`;
+const hl = (d, w = 5) => p(d, '', 'rgba(255,255,255,.55)', w);
+const DK = 'rgba(0,0,0,.22)', EO = 'fill-rule="evenodd"';
+const ringD = (x, y, R, q) => `M${x - R} ${y}a${R} ${R} 0 1 0 ${2 * R} 0a${R} ${R} 0 1 0 ${-2 * R} 0ZM${x - q} ${y}a${q} ${q} 0 1 0 ${2 * q} 0a${q} ${q} 0 1 0 ${-2 * q} 0Z`;
+// 윗변은 평평하고 아랫변이 물결치는 띠 (상추·크림·잼 층)
+function wavy(w, top, mid, dip, n, f, s) {
+  const st = (w - 12) / n; let d = `M6 ${mid}V${top + 6}Q6 ${top} 12 ${top}H${w - 12}Q${w - 6} ${top} ${w - 6} ${top + 6}V${mid}`;
+  for (let i = 0, x = w - 6; i < n; i++, x -= st) d += `Q${x - st / 2} ${dip} ${x - st} ${mid}`;
+  return p(d + 'Z', f, s);
+}
+const STAR = 'M50 8L61 36L92 38L68 58L76 90L50 72L24 90L32 58L8 38L39 36Z';
+const BERRY = p('M50 92Q14 64 20 38Q26 20 50 27Q74 20 80 38Q86 64 50 92Z', '#f2485f', '#bf2740') + [[38, 46], [56, 44], [66, 56], [46, 62], [34, 60], [54, 76]].map(q => e(q[0], q[1], 2.5, 4, '#ffe0a8')).join('') + p('M28 28Q40 8 50 20Q60 8 72 28Q58 36 50 29Q42 36 28 28Z', '#6cc04a', '#3f8f2a') + hl('M28 46Q30 36 38 34', 4);
+const CHERRY = p('M36 50Q42 22 62 12M68 44Q68 26 62 12', '', '#5c8f2a', 4) + c(34, 68, 20, '#e8324a', '#a81c33') + c(68, 62, 20, '#e8324a', '#a81c33') + hl('M24 62Q26 54 32 52', 4) + hl('M58 56Q60 48 66 46', 4);
+const BLUE = [[34, 40], [66, 44], [48, 68]].map(q => c(q[0], q[1], 19, '#6f6bd8', '#4744a8') + p(`M${q[0] - 6} ${q[1] - 6}l6 4l6 -4l-2 7l-8 0Z`, '#4744a8') + hl(`M${q[0] - 12} ${q[1] - 2}q1 -8 8 -10`, 3)).join('');
+const TOMATO = c(50, 50, 42, '#f0553f', '#c2331f') + c(50, 50, 31, '#f77e66') + [0, 90, 180, 270].map(a => `<g transform="rotate(${a + 45} 50 50)">` + e(50, 30, 8, 12, '#ffd9a8') + c(48, 28, 2, '#f0a860') + c(53, 33, 2, '#f0a860') + '</g>').join('') + c(50, 50, 6, '#f9a58f') + hl('M18 42Q22 26 36 18');
+const CHEESE = p('M50 10L90 50L50 90L10 50Z', '#ffcf40', '#e0a419') + c(40, 50, 7, '#f2b62a') + c(60, 62, 5, '#f2b62a') + c(58, 36, 4, '#f2b62a') + hl('M26 46L46 26');
+const COOKIE = c(50, 50, 40, '#dba75e', '#a8742f') + [[36, 36, 7], [62, 34, 6], [66, 58, 7], [42, 64, 8], [50, 48, 5]].map(q => c(q[0], q[1], q[2], '#6b3d1e')).join('') + hl('M18 44Q22 28 34 20');
+const HEART = p('M50 86Q8 56 16 30Q24 10 50 30Q76 10 84 30Q92 56 50 86Z', '#ff7fa8', '#d94f7c') + hl('M24 38Q26 28 34 26');
+const BANANA = p('M14 32Q20 80 70 86Q90 86 90 72Q52 70 34 26Q22 16 14 32Z', '#ffe14d', '#d9b014') + p('M14 32L20 24', '', '#8a6a1a', 6) + hl('M28 52Q38 72 60 78', 4);
+const bowlArt = (col, extra = '') => c(50, 50, 44, '#fff', '#c9d3dd') + c(50, 50, 34, col, DK) + extra + hl('M32 44Q44 30 60 32');
+const swirl = col => e(50, 74, 38, 16, col, DK) + e(50, 54, 28, 14, col, DK) + e(50, 36, 18, 12, col, DK) + p('M40 32Q50 4 58 30Z', col, DK) + hl('M22 70Q26 62 36 62', 4);
+const frostIcon = col => p('M28 60H72L66 94H34Z', '#ffd3a0', '#d99a5a') + p('M38 62L40 92M50 62V92M62 62L60 92', '', '#f2b87a', 3) + e(50, 56, 32, 13, col, DK) + e(50, 40, 23, 11, col, DK) + e(50, 27, 13, 9, col, DK) + p('M44 22Q50 6 56 22Z', col, DK) + hl('M26 54Q30 48 38 48', 4);
+const scoopIcon = col => c(50, 52, 38, col, DK) + hl('M28 42Q36 24 54 22');
+const scoopL = col => ({ vb: [130, 96], b: p('M8 66Q4 8 65 6Q126 8 122 66Q116 84 104 72Q92 90 80 74Q65 92 50 74Q38 90 26 72Q14 84 8 66Z', col, DK) + hl('M26 38Q36 18 60 16', 7) });
+const stripIcon = (col, extra = '') => `<g transform="rotate(-28 50 50)">` + r(4, 36, 92, 28, 14, col, DK) + extra + hl('M16 44H70', 4) + '</g>';
+const stripL = (col, extra = '') => ({ vb: [300, 30], b: r(3, 4, 294, 22, 11, col, DK) + extra + hl('M18 11H230', 4) });
+const sliceArt = cols => c(50, 50, 46, '#2f4a35', '#1d3023') + c(50, 50, 38, '#fffdf5') + [[50, 50], [36, 42], [64, 42], [40, 62], [62, 62], [50, 32]].slice(0, cols.length).map((q, i) => r(q[0] - 9, q[1] - 9, 18, 18, 5, cols[i], DK, 2)).join('') + hl('M20 36Q26 22 38 16', 3);
+
+const A = {
+  /* 피자 */
+  pep: c(50, 50, 42, '#e2553f', '#b5372a') + c(35, 38, 7, '#f08a73') + c(63, 34, 5, '#f08a73') + c(60, 63, 8, '#f08a73') + c(36, 65, 5, '#f08a73') + hl('M18 42Q22 26 36 18'),
+  mozz: p('M20 50Q18 22 48 18Q80 14 82 46Q88 78 54 82Q22 86 20 50Z', '#fff6d0', '#e8c45e') + e(40, 44, 8, 5, '#ffe9a0') + e(60, 58, 9, 6, '#ffe9a0') + hl('M30 36Q40 26 54 26'),
+  mush: p('M12 48Q14 14 50 14Q86 14 88 48Q74 55 62 52L64 82Q50 90 36 82L38 52Q26 55 12 48Z', '#f6e7d3', '#b9906a') + p('M28 44Q50 34 72 44', '', '#d8bfa2', 3) + hl('M24 34Q30 22 44 20'),
+  pepper: p('M50 10Q78 8 86 34Q96 60 74 80Q50 96 26 80Q4 60 14 34Q22 8 50 10ZM50 30Q64 29 68 42Q73 57 61 66Q50 73 39 66Q27 57 32 42Q36 29 50 30Z', '#6cc04a', '#3f8f2a', 4, EO) + hl('M20 40Q24 24 38 18'),
+  tomato: TOMATO,
+  corn: [[36, 38], [62, 36], [30, 64], [56, 62], [74, 58]].map(q => e(q[0], q[1], 13, 15, '#ffd23f', '#d99a14') + hl(`M${q[0] - 6} ${q[1] - 4}q1 -5 5 -6`, 3)).join(''),
+  olive: p(ringD(36, 40, 22, 9), '#4a4654', '#24222b', 4, EO) + p(ringD(64, 62, 22, 9), '#4a4654', '#24222b', 4, EO) + hl('M22 34Q26 24 34 22', 3) + hl('M50 56Q54 46 62 44', 3),
+  pine: p('M18 70Q14 30 50 22Q86 30 82 70Q50 84 18 70Z', '#ffd84a', '#d9a514') + p('M34 34L40 74M50 28V78M66 34L60 74', '', '#e9b82a', 3) + hl('M26 50Q30 36 42 32', 4),
+  s_tomato: bowlArt('#e9503a'), s_cheese: bowlArt('#ffd668'), s_pesto: bowlArt('#8fcb5a'), s_cream: bowlArt('#fff4dc'),
+  /* 햄버거 */
+  patty: r(10, 32, 80, 36, 18, '#8a4b28', '#5c2f16') + p('M28 40L36 60M46 40L54 60M64 40L72 60', '', '#6a3519', 4) + hl('M20 40H40', 4),
+  cheese: CHEESE,
+  lettuce: p('M50 12Q64 4 72 18Q90 16 88 36Q100 50 86 62Q90 82 70 82Q58 96 44 84Q24 90 22 70Q4 62 14 44Q8 24 28 22Q34 6 50 12Z', '#8ad45c', '#4f9e32') + p('M50 26V74M50 44L34 34M50 54L68 44M50 64L36 58', '', '#5fb23c', 3),
+  bacon: p('M10 40Q22 26 34 40Q46 54 58 40Q70 26 90 40V62Q70 48 58 62Q46 76 34 62Q22 48 10 62Z', '#d8573e', '#a43624') + p('M12 51Q22 37 34 51Q46 65 58 51Q70 37 88 51', '', '#f6c4ae', 6),
+  egg: p('M22 34Q40 8 66 22Q94 30 84 58Q88 86 58 86Q30 96 18 68Q6 50 22 34Z', '#fff', '#e3d9c6') + c(52, 52, 17, '#ffc21a', '#e09a00') + c(46, 46, 5, '#ffe38a'),
+  onion: p(ringD(50, 50, 42, 26), '#f4e3f9', '#b98fcf', 4, EO) + c(50, 50, 34, 'none', '#d9bde6', 3),
+  pickle: [[36, 40], [64, 62]].map(q => c(q[0], q[1], 24, '#a8cf48', '#6f9422') + c(q[0], q[1], 15, '#c6e274') + c(q[0] - 5, q[1] - 3, 2.5, '#8fb23a') + c(q[0] + 5, q[1] + 2, 2.5, '#8fb23a') + c(q[0], q[1] + 7, 2.5, '#8fb23a')).join(''),
+  fries: [[30, 12, -8], [42, 6, -3], [54, 8, 4], [64, 12, 10], [36, 18, 2]].map(q => r(q[0], q[1], 10, 50, 3, '#ffd23f', '#d99a14', 3, q[2])).join('') + p('M20 44H80L72 92H28Z', '#e9463a', '#b82d23') + p('M38 62Q50 74 62 62', '', '#fff', 5),
+  cola: p('M56 22L64 2', '', '#59b7ff', 6) + p('M26 28H74L68 92H32Z', '#e9463a', '#b82d23') + p('M28 48H72L70 66H30Z', '#fff') + r(20, 18, 60, 12, 6, '#fff', '#c9d3dd'),
+  flag: p('M30 8V92', '', '#b98a52', 6) + p('M32 10L86 26L32 44Z', '#ff6b5e', '#c9443a') + hl('M40 20L60 26', 4),
+  cookie: COOKIE, berry: BERRY, cherry: CHERRY, blue: BLUE, heart: HEART,
+  star: p(STAR, '#ffd23f', '#e0a000') + hl('M34 44L44 40', 4),
+  /* 컵케이크 */
+  eggw: e(50, 54, 30, 38, '#fff3df', '#d9bf9a') + hl('M32 44Q34 28 46 22'),
+  milk: p('M28 36L40 14H60L72 36Z', '#8fd0ff', '#5aa7de') + r(28, 34, 44, 56, 6, '#fff', '#9fc7ea') + r(34, 52, 32, 22, 5, '#8fd0ff') + c(50, 63, 6, '#fff'),
+  butter: p('M14 44L60 30L88 44V66L42 82L14 66Z', '#ffe27a', '#d9b23a') + p('M14 44L42 58L88 44M42 58V82', '', '#d9b23a', 4) + hl('M30 44L58 36', 4),
+  flour: r(24, 24, 52, 68, 10, '#f7ead2', '#c9ab7c') + r(24, 12, 52, 18, 6, '#e9d5b0', '#c9ab7c') + p('M50 46V78M50 56L40 48M50 56L60 48M50 66L40 58M50 66L60 58', '', '#d9a84a', 4),
+  honey: r(26, 30, 48, 60, 12, '#ffb62e', '#c9821a') + r(22, 16, 56, 18, 6, '#fff3df', '#c9ab7c') + c(50, 60, 13, '#fff3df') + p('M44 60H56M50 54V66', '', '#ffb62e', 4),
+  choco: r(20, 14, 60, 72, 8, '#7a4424', '#4f2a12') + p('M40 14V86M60 14V86M20 38H80M20 62H80', '', '#5c2f16', 3) + hl('M26 22H34', 4),
+  f_pink: frostIcon('#ff9ec4'), f_white: frostIcon('#fffaf0'), f_choco: frostIcon('#8a5530'), f_mint: frostIcon('#9fe3d0'),
+  c_white: bowlArt('#fffaf0', p('M36 54Q44 40 52 52Q60 42 66 54', '', '#e9dfcc', 4)), c_choco: bowlArt('#7a4424', p('M36 54Q44 40 52 52Q60 42 66 54', '', '#5c2f16', 4)),
+  /* 주스 */
+  banana: BANANA,
+  orange: c(50, 54, 36, '#ff9f2e', '#d97a0c') + p('M50 20Q58 6 72 12Q64 24 50 20Z', '#6cc04a', '#3f8f2a', 3) + c(40, 58, 2, '#e98a1a') + c(58, 66, 2, '#e98a1a') + c(60, 46, 2, '#e98a1a') + hl('M24 46Q28 30 42 24'),
+  kiwi: e(50, 52, 40, 36, '#8a6a3a', '#5f4722') + e(50, 52, 33, 29, '#a5d64f') + e(50, 52, 10, 8, '#f3f7d0') + [0, 45, 90, 135, 180, 225, 270, 315].map(a => `<g transform="rotate(${a} 50 52)">` + e(50, 36, 2, 3.5, '#2b2b2b') + '</g>').join(''),
+  melon: p('M8 32Q50 112 92 32Z', '#58b84a', '#3a8a30') + p('M18 34Q50 94 82 34Z', '#ff5f6f') + [[38, 48], [50, 58], [62, 48], [50, 42]].map(q => e(q[0], q[1], 2.5, 4, '#3b2a25')).join(''),
+  peach: c(50, 56, 34, '#ffb08a', '#e07a55') + p('M50 24Q40 54 52 88', '', '#e07a55', 3) + p('M50 24Q60 8 76 14Q66 28 50 24Z', '#6cc04a', '#3f8f2a', 3) + e(36, 50, 9, 12, '#ff8f7a') + hl('M28 46Q30 34 40 30', 4),
+  mango: e(50, 54, 38, 30, '#ffc233', '#d9920c', 4, -20) + e(36, 46, 14, 10, '#ff9a4a', '', 0, -20) + p('M74 30Q80 20 88 22', '', '#5c8f2a', 4) + hl('M26 56Q24 44 34 36', 4),
+  ice: p('M20 34L50 20L80 34V68L50 84L20 68Z', '#cfeeff', '#8cc7ec') + p('M20 34L50 48L80 34M50 48V84', '', '#8cc7ec', 4) + hl('M28 42V58', 4),
+  lemon: c(50, 50, 40, '#ffe14d', '#d9b014') + c(50, 50, 32, '#fff7b8') + [0, 60, 120].map(a => p('M50 20V80', '', '#ffe14d', 3, `transform="rotate(${a} 50 50)"`)).join('') + c(50, 50, 4, '#ffe14d'),
+  umbrella: p('M50 46V94', '', '#b98a52', 5) + p('M8 50Q50 -8 92 50Z', '#ff7fa8', '#d94f7c') + p('M50 12Q36 30 36 50M50 12Q64 30 64 50', '', '#d94f7c', 3) + p('M36 50Q22 30 50 12Q78 30 64 50', '#ffd84a'),
+  flower: [0, 72, 144, 216, 288].map(a => `<g transform="rotate(${a} 50 50)">` + c(50, 24, 17, '#ff9ec4', '#d96a98') + '</g>').join('') + c(50, 50, 13, '#ffd23f', '#e0a000'),
+  /* 아이스크림 */
+  i_berry: scoopIcon('#ff9ec4'), i_choco: scoopIcon('#8a5530'), i_vanilla: scoopIcon('#fff3d0'), i_mint: scoopIcon('#9fe3d0'), i_blue: scoopIcon('#a79bf0'), i_mango: scoopIcon('#ffc94a'),
+  L_i_berry: scoopL('#ff9ec4'), L_i_choco: scoopL('#8a5530'), L_i_vanilla: scoopL('#fff3d0'), L_i_mint: scoopL('#9fe3d0'), L_i_blue: scoopL('#a79bf0'), L_i_mango: scoopL('#ffc94a'),
+  cone: { vb: [150, 170], b: p('M10 8H140L75 166Z', '#e9b565', '#b9813a') + p('M32 12L98 112M62 12L114 84M92 12L128 54M118 12L52 112M88 12L36 84M58 12L22 54', '', '#c9934a', 3) + r(2, 0, 146, 18, 9, '#f2c67a', '#b9813a') },
+  wafer: `<g transform="rotate(25 50 50)">` + r(38, 6, 24, 88, 6, '#e2a85a', '#b07a30') + p('M38 28H62M38 50H62M38 72H62', '', '#b07a30', 3) + '</g>',
+  marsh: r(22, 28, 56, 46, 16, '#fff', '#e3d9c6') + hl('M30 40Q32 34 40 34') + e(50, 62, 16, 4, '#f3ece0'),
+  /* 도넛 */
+  g_berry: bowlArt('#ff9ec4'), g_choco: bowlArt('#7a4424'), g_vanilla: bowlArt('#fff3d0'), g_matcha: bowlArt('#a8d672'),
+  sprinkle: [[20, 26, '#ff6b5e', 30], [54, 18, '#59b7ff', -20], [66, 50, '#ffd23f', 60], [26, 58, '#5fd068', -40], [48, 72, '#b98cff', 10], [44, 42, '#ff9fd0', 80]].map(q => r(q[0], q[1], 26, 10, 5, q[2], DK, 2, q[3])).join(''),
+  chips: [[34, 38], [66, 44], [46, 68]].map(q => p(`M${q[0] - 13} ${q[1] + 8}Q${q[0] - 12} ${q[1] - 6} ${q[0]} ${q[1] - 14}Q${q[0] + 12} ${q[1] - 6} ${q[0] + 13} ${q[1] + 8}Q${q[0]} ${q[1] + 16} ${q[0] - 13} ${q[1] + 8}Z`, '#6b3d1e', '#45240f', 3)).join(''),
+  /* 김밥 */
+  rice_w: bowlArt('#fffdf5', [[40, 46], [56, 42], [50, 58], [62, 56], [38, 60]].map(q => e(q[0], q[1], 4, 2.5, '#e9e2cf')).join('')),
+  rice_p: bowlArt('#e3cfe8', [[40, 46], [56, 42], [50, 58], [62, 56], [38, 60]].map(q => e(q[0], q[1], 4, 2.5, '#b79ac2')).join('')),
+  k_danmuji: stripIcon('#ffd84a'), k_ham: stripIcon('#f59aa5'), k_egg: stripIcon('#ffe88a'), k_carrot: stripIcon('#ff8a3c'), k_spinach: stripIcon('#4fa84a'), k_cucumber: stripIcon('#9bd46a'),
+  k_crab: stripIcon('#ff6b5e', r(8, 46, 84, 14, 7, '#fff')), k_burdock: stripIcon('#a8743f'),
+  L_k_danmuji: stripL('#ffd84a'), L_k_ham: stripL('#f59aa5'), L_k_egg: stripL('#ffe88a'), L_k_carrot: stripL('#ff8a3c'), L_k_spinach: stripL('#4fa84a'), L_k_cucumber: stripL('#9bd46a'),
+  L_k_crab: stripL('#ff6b5e', r(8, 14, 284, 10, 5, '#fff')), L_k_burdock: stripL('#a8743f'),
+  /* 팬케이크 */
+  pcake: e(50, 58, 42, 26, '#c98a3a', '#9a6420') + e(50, 50, 42, 26, '#eeb45a', '#b9772a') + hl('M22 46Q30 34 46 32'),
+  jam: r(26, 30, 48, 60, 12, '#e8324a', '#a81c33') + r(22, 16, 56, 18, 6, '#fff3df', '#c9ab7c') + c(50, 60, 13, '#fff3df') + p('M50 66Q40 58 50 54Q60 58 50 66Z', '#e8324a'),
+  syrup: p('M38 28H62V40Q76 48 76 62V86Q76 92 70 92H30Q24 92 24 86V62Q24 48 38 40Z', '#d9892b', '#a8611a') + r(36, 14, 28, 16, 5, '#7a4424', '#4f2a12') + r(32, 58, 36, 20, 5, '#fff3df') + hl('M32 60V52', 4),
+  pat: r(24, 30, 52, 40, 8, '#ffe27a', '#d9b23a', 4, -10) + hl('M34 40L52 37', 4),
+  /* 쌓는 층 (옆모습) */
+  L_patty: { vb: [280, 40], b: r(8, 4, 264, 32, 16, '#8a4b28', '#5c2f16') + [40, 78, 120, 160, 204, 240].map((x, i) => c(x, 14 + i % 3 * 7, 3, '#6a3519')).join('') + hl('M26 12H190', 4) },
+  L_cheese: { vb: [280, 32], b: p('M4 4H276L262 14H238L226 28L214 14H122L110 26L98 14H20Z', '#ffcf40', '#e0a419') + hl('M30 9H200', 3) },
+  L_lettuce: { vb: [280, 34], b: wavy(280, 4, 16, 36, 9, '#8ad45c', '#4f9e32') + hl('M24 10H220', 3) },
+  L_tomato: { vb: [280, 28], b: [8, 98, 188].map(x => r(x, 4, 84, 20, 10, '#f0553f', '#c2331f') + r(x + 12, 9, 60, 6, 3, '#f77e66')).join('') },
+  L_bacon: { vb: [280, 28], b: p('M6 10Q28 0 50 10Q72 20 94 10Q116 0 138 10Q160 20 182 10Q204 0 226 10Q248 20 274 10V20Q248 30 226 20Q204 10 182 20Q160 30 138 20Q116 10 94 20Q72 30 50 20Q28 10 6 20Z', '#d8573e', '#a43624') + p('M10 15Q28 5 50 15Q72 25 94 15Q116 5 138 15Q160 25 182 15Q204 5 226 15Q248 25 270 15', '', '#f6c4ae', 4) },
+  L_egg: { vb: [280, 36], b: p('M110 18Q140 -10 170 18Z', '#ffc21a', '#e09a00') + p('M30 26Q14 14 60 14H220Q266 14 250 26Q240 32 140 32Q40 32 30 26Z', '#fff', '#e3d9c6') },
+  L_onion: { vb: [280, 22], b: [14, 100, 186].map(x => r(x, 4, 80, 14, 7, '#f4e3f9', '#b98fcf', 3)).join('') },
+  L_pickle: { vb: [280, 22], b: [16, 80, 144, 208].map(x => r(x, 4, 56, 14, 7, '#a8cf48', '#6f9422', 3)).join('') },
+  bunB: { vb: [280, 52], b: p('M12 6H268Q272 6 272 12Q272 46 236 46H44Q8 46 8 12Q8 6 12 6Z', '#eaa550', '#c07d2c') + hl('M28 14H180', 4) },
+  bunT: { vb: [280, 96], b: p('M10 86Q4 8 140 8Q276 8 270 86Q270 92 262 92H18Q10 92 10 86Z', '#eaa550', '#c07d2c') + hl('M44 38Q82 18 132 18', 7) + [[100, 44, -20], [140, 30, 10], [184, 46, 25], [70, 62, 15], [160, 64, -10], [216, 66, 20], [120, 70, 30]].map(q => e(q[0], q[1], 7, 4, '#fff1cf', '', 0, q[2])).join('') },
+  L_pcake: { vb: [280, 46], b: r(6, 4, 268, 38, 19, '#e9a94e', '#b9772a') + r(12, 17, 256, 13, 6, '#f8dc98') + hl('M30 10H190', 3) },
+  L_cream: { vb: [280, 34], b: wavy(280, 4, 16, 38, 7, '#fff', '#e3d9c6') },
+  L_jam: { vb: [280, 26], b: wavy(280, 4, 12, 30, 6, '#e8324a', '#a81c33') + hl('M24 9H180', 3) },
+  L_chocoL: { vb: [280, 26], b: wavy(280, 4, 12, 30, 6, '#7a4424', '#4f2a12') + hl('M24 9H180', 3) },
+  L_banana: { vb: [280, 30], b: [10, 62, 114, 166, 218].map(x => e(x + 26, 15, 25, 11, '#fff3b0', '#d9b014', 3) + c(x + 26, 15, 3, '#e9cf6a')).join('') },
+  L_blue: { vb: [280, 34], b: [22, 60, 98, 136, 174, 212, 250].map(x => c(x + 4, 17, 15, '#6f6bd8', '#4744a8', 3) + hl(`M${x - 4} ${14}q1 -6 6 -8`, 3)).join('') },
+  L_syrup: { vb: [280, 64], b: p('M20 16Q140 -8 260 16Q270 32 252 32Q248 60 236 32H190Q186 54 174 32H110Q104 64 94 32H50Q44 50 34 32Q10 32 20 16Z', '#d9892b', '#a8611a') + hl('M50 14Q120 4 200 10', 4) },
+  /* 바탕 */
+  dough: { vb: [400, 400], b: c(200, 200, 190, '#eab968', '#c98d3c', 6) + p('M44 150A166 166 0 0 1 150 44', '', 'rgba(255,255,255,.4)', 12) + c(200, 200, 163, '#f8e2b0', '#e0b46a', 3) },
+  donut: { vb: [400, 400], b: `<path d="${ringD(200, 200, 182, 50)}" ${EO} style="fill:var(--dn,#f6e6bd)" stroke="#b9813a" stroke-width="6"/>` + p('M50 150A160 160 0 0 1 150 50', '', 'rgba(255,255,255,.4)', 12) },
+  gim: { vb: [360, 300], b: r(2, 2, 356, 296, 12, '#2f4a35', '#1d3023') + [30, 90, 150, 210, 270].map((y, i) => p(`M${20 + i * 9} ${y}h60m40 0h80m30 0h50`, '', '#3b5c43', 3)).join('') },
+  frost: { vb: [260, 180], b: ['M8 140a122 34 0 1 0 244 0a122 34 0 1 0 -244 0Z', 'M40 98a90 30 0 1 0 180 0a90 30 0 1 0 -180 0Z', 'M74 60a56 24 0 1 0 112 0a56 24 0 1 0 -112 0Z', 'M106 52Q130 -8 152 46Z'].map(d => `<path d="${d}" style="fill:var(--frost)" stroke="${DK}" stroke-width="5"/>`).join('') + hl('M34 132Q44 118 70 116', 7) + hl('M62 92Q70 82 90 80', 6) },
+  /* 메뉴 카드 */
+  m_pizza: c(50, 50, 45, '#eab968', '#c98d3c') + c(50, 50, 35, '#e9503a') + [[38, 38], [63, 44], [46, 64]].map(q => c(q[0], q[1], 9, '#c93a2a', '#a12a1d', 2)).join('') + [[58, 28], [30, 56], [66, 64], [48, 48]].map(q => e(q[0], q[1], 6, 4, '#ffe08a')).join('') + hl('M14 40Q18 22 34 12'),
+  m_burger: p('M12 44Q12 12 50 12Q88 12 88 44Z', '#eaa550', '#c07d2c') + p('M8 48Q20 40 30 48Q40 40 50 48Q60 40 70 48Q80 40 92 48V56H8Z', '#8ad45c', '#4f9e32') + r(10, 56, 80, 14, 7, '#8a4b28', '#5c2f16') + p('M12 54H88L80 62L72 54', '#ffcf40', '#e0a419', 3) + r(12, 72, 76, 17, 8, '#eaa550', '#c07d2c') + e(40, 26, 4, 2.5, '#fff1cf') + e(56, 22, 4, 2.5, '#fff1cf') + e(66, 32, 4, 2.5, '#fff1cf'),
+  m_cupcake: p('M26 56H74L68 94H32Z', '#ff8fb1', '#d95f85') + p('M36 58L39 92M50 58V92M64 58L61 92', '', '#ffc2d4', 4) + e(50, 52, 30, 12, '#ff9ec4', '#d96a98') + e(50, 38, 21, 10, '#ff9ec4', '#d96a98') + e(50, 26, 12, 8, '#ff9ec4', '#d96a98') + c(50, 14, 8, '#e8324a', '#a81c33'),
+  m_juice: p('M56 30L68 2', '', '#ff6b5e', 7) + p('M26 24H74L68 94H32Z', '#ffb13b', '#d98a1b') + p('M27 24H73L72 36H28Z', '#ffe0a0') + c(76, 26, 14, '#ff9f2e', '#d97a0c') + c(76, 26, 8, '#ffd08a') + hl('M36 44L39 80'),
+  m_ice: p('M30 54H70L50 96Z', '#e9b565', '#b9813a') + c(50, 44, 22, '#ff9ec4', '#d96a98') + c(50, 22, 17, '#fff3d0', '#d9c48a') + c(50, 6, 6, '#e8324a', '#a81c33') + hl('M34 40Q38 30 46 28', 4),
+  m_donut: p(ringD(50, 50, 44, 14), '#e9b565', '#b9813a', 4, EO) + p(ringD(50, 50, 36, 20), '#ff9ec4', '', 0, EO) + [[30, 34, '#59b7ff', 30], [58, 22, '#ffd23f', -20], [70, 52, '#5fd068', 60], [28, 60, '#fff', -40], [52, 74, '#b98cff', 10]].map(q => r(q[0], q[1], 12, 5, 2.5, q[2], '', 0, q[3])).join(''),
+  m_kimbap: `<g transform="translate(0,6) scale(.6)">${sliceArt(['#ffd84a', '#f59aa5', '#4fa84a', '#ff8a3c'])}</g><g transform="translate(40,34) scale(.6)">${sliceArt(['#ffe88a', '#ff8a3c', '#9bd46a', '#f59aa5'])}</g>`,
+  m_pancake: r(12, 66, 76, 18, 9, '#e9a94e', '#b9772a') + r(12, 50, 76, 18, 9, '#e9a94e', '#b9772a') + r(12, 34, 76, 18, 9, '#e9a94e', '#b9772a') + p('M16 36Q50 22 84 36Q86 44 78 44Q76 58 70 44H40Q38 62 30 44Q14 44 16 36Z', '#d9892b', '#a8611a', 3) + r(40, 22, 20, 12, 3, '#ffe27a', '#d9b23a', 3),
+};
+function svgHTML(id, w, cls) {
+  const a = A[id], vb = a.vb || [100, 100];
+  return `<svg class="art${cls ? ' ' + cls : ''}" viewBox="0 0 ${vb[0]} ${vb[1]}" style="width:${w}px;height:${w * vb[1] / vb[0]}px">${a.b || a}</svg>`;
+}
+document.querySelector('#title .foods').innerHTML = ['m_pizza', 'm_burger', 'm_cupcake', 'm_donut'].map((k, i) => `<i style="animation-delay:${i * .2}s">${svgHTML(k, 100)}</i>`).join('');
+
 /* ================= 놀이 도구 ================= */
-function ing(item) {
-  const d = el('ing' + (item.cls ? ' ' + item.cls : '') + (item.color ? ' sw' : ''));
-  if (item.color) d.style.background = item.color;
-  if (item.e && !item.cls) d.textContent = item.e;
-  return d;
+const ing = item => el('ing', svgHTML(item.a, 72));
+const mixHex = (a, b, t) => { const x = parseInt(a.slice(1), 16), y = parseInt(b.slice(1), 16), m = s => Math.round((x >> s & 255) + ((y >> s & 255) - (x >> s & 255)) * t); return `rgb(${m(16)},${m(8)},${m(0)})`; };
+const mixColor = cols => { if (!cols.length) return '#ffb13b'; const s = [0, 0, 0]; cols.forEach(q => { const n = parseInt(q.slice(1), 16); s[0] += n >> 16; s[1] += (n >> 8) & 255; s[2] += n & 255; }); return `rgb(${s.map(v => Math.round(v / cols.length)).join(',')})`; };
+
+// 재료를 누르면 이름을 말해 주고 이름표를 띄운다
+function announce(btn, name) {
+  say(name);
+  stage.querySelectorAll('.tag').forEach(t => t.remove());
+  const b = btn.getBoundingClientRect(), q = toStage(btn.parentNode.getBoundingClientRect().left, b.top + b.height / 2), t = el('tag'); t.textContent = name;
+  t.style.left = q.x - 12 + 'px'; t.style.top = q.y + 'px'; stage.appendChild(t); setTimeout(() => t.remove(), 1400);
 }
 
 // 쟁반에서 끌어다 놓기. 4세는 끌기가 서툴 수 있어 "톡 누르기"만 해도 재료가 날아가 놓인다.
 function dropStep(ctx, o) {
   let count = 0;
-  const inRect = (cx, cy) => { const r = o.target.getBoundingClientRect(), m = 20 * S; return cx > r.left - m && cx < r.right + m && cy > r.top - m && cy < r.bottom + m; };
+  const inRect = (cx, cy) => { const b = o.target.getBoundingClientRect(), m = 20 * S; return cx > b.left - m && cx < b.right + m && cy > b.top - m && cy < b.bottom + m; };
   const accept = o.accept || inRect;
-  const auto = o.auto || (() => { const r = o.target.getBoundingClientRect(); return { cx: r.left + r.width * rnd(.3, .7), cy: r.top + r.height * rnd(.3, .7) }; });
+  const auto = o.auto || (() => { const b = o.target.getBoundingClientRect(); return { cx: b.left + b.width * rnd(.3, .7), cy: b.top + b.height * rnd(.3, .7) }; });
   function placed(item, cx, cy) {
     if (!ctx.alive) return;
     if (o.place(item, cx, cy) === false) return;
@@ -436,21 +597,21 @@ function dropStep(ctx, o) {
   }
   o.items.forEach(item => {
     const b = document.createElement('button'); b.className = 'tbtn'; b.appendChild(ing(item)); ctx.tray.appendChild(b);
-    b.addEventListener('pointerdown', e => {
-      e.preventDefault(); snd.pick();
+    b.addEventListener('pointerdown', ev0 => {
+      ev0.preventDefault(); snd.pick(); announce(b, item.n);
       const g = ing(item); g.classList.add('ghost'); stage.appendChild(g);
-      const sx = e.clientX, sy = e.clientY; let moved = false;
-      const move = (cx, cy) => { const p = toStage(cx, cy); g.style.left = p.x + 'px'; g.style.top = p.y + 'px'; };
+      const sx = ev0.clientX, sy = ev0.clientY; let moved = false;
+      const move = (cx, cy) => { const q = toStage(cx, cy); g.style.left = q.x + 'px'; g.style.top = q.y + 'px'; };
       move(sx, sy);
-      try { b.setPointerCapture(e.pointerId); } catch (err) {}
-      const onMove = ev => { if (ev.pointerId !== e.pointerId) return; if (Math.hypot(ev.clientX - sx, ev.clientY - sy) > 14 * S) moved = true; move(ev.clientX, ev.clientY); };
+      try { b.setPointerCapture(ev0.pointerId); } catch (err) {}
+      const onMove = ev => { if (ev.pointerId !== ev0.pointerId) return; if (Math.hypot(ev.clientX - sx, ev.clientY - sy) > 14 * S) moved = true; move(ev.clientX, ev.clientY); };
       const onUp = ev => {
-        if (ev.pointerId !== e.pointerId) return;
+        if (ev.pointerId !== ev0.pointerId) return;
         b.removeEventListener('pointermove', onMove); b.removeEventListener('pointerup', onUp); b.removeEventListener('pointercancel', onUp);
         if (moved && ev.type === 'pointerup' && accept(ev.clientX, ev.clientY)) { g.remove(); placed(item, ev.clientX, ev.clientY); return; }
         g.classList.add('fly');
-        if (!moved && ev.type === 'pointerup') { const p = auto(); move(p.cx, p.cy); setTimeout(() => { g.remove(); placed(item, p.cx, p.cy); }, 370); }
-        else { snd.whoosh(); const c = center(b); move(c.cx, c.cy); setTimeout(() => g.remove(), 370); }
+        if (!moved && ev.type === 'pointerup') { const q = auto(); move(q.cx, q.cy); setTimeout(() => { g.remove(); placed(item, q.cx, q.cy); }, 370); }
+        else { snd.whoosh(); const q = center(b); move(q.cx, q.cy); setTimeout(() => g.remove(), 370); }
       };
       b.addEventListener('pointermove', onMove); b.addEventListener('pointerup', onUp); b.addEventListener('pointercancel', onUp);
     });
@@ -458,46 +619,71 @@ function dropStep(ctx, o) {
   hint.drag(ctx.tray.firstChild, o.target);
 }
 
-// 요리 상자 위에 자유롭게 올리기
-function freePlace(layer, max = 60) {
+// 요리 위에 자유롭게 올리기
+function freePlace(layer, o = {}) {
   return (item, cx, cy) => {
-    if (layer.children.length >= max) layer.firstChild.remove();
-    const p = local(layer, cx, cy), d = ing(item);
-    d.classList.add('placed'); d.style.left = p.x + 'px'; d.style.top = p.y + 'px'; d.style.setProperty('--r', rnd(-25, 25) + 'deg');
+    if (layer.children.length >= (o.max || 60)) layer.firstChild.remove();
+    const q = local(layer, cx, cy), d = el('placed', svgHTML(item.put || item.a, item.w || 84)), rot = o.rot == null ? 25 : o.rot;
+    d.style.left = (o.fixX == null ? q.x : o.fixX) + 'px'; d.style.top = q.y + 'px'; d.style.setProperty('--r', rnd(-rot, rot) + 'deg');
     layer.appendChild(d);
   };
+}
+// 층층이 쌓기. base: 맨 아래 고정된 조각 수(빵 등)
+// 나중에 올린 층이 항상 위에 그려지도록 순서를 매긴다
+function topLayer(stack, d) { stack.zi = (stack.zi || 1) + 1; d.style.zIndex = stack.zi; stack.appendChild(d); }
+function addLayer(stack, item, max, base = 0) {
+  if (stack.children.length >= max + base) stack.children[base].remove();
+  const d = el('ly', svgHTML(item.L, A[item.L].vb[0])); d.style.marginBottom = -(item.ov == null ? 6 : item.ov) + 'px';
+  topLayer(stack, d);
 }
 
 // 문지르기
 function scrub(node, fn) {
   const pts = new Map();
-  const down = e => { e.preventDefault(); pts.set(e.pointerId, [e.clientX, e.clientY]); try { node.setPointerCapture(e.pointerId); } catch (err) {} fn(e.clientX, e.clientY, 0); };
-  const move = e => { const p = pts.get(e.pointerId); if (!p) return; const d = Math.hypot(e.clientX - p[0], e.clientY - p[1]) / S; pts.set(e.pointerId, [e.clientX, e.clientY]); fn(e.clientX, e.clientY, d, p[0], p[1]); };
-  const up = e => pts.delete(e.pointerId);
+  const down = ev => { ev.preventDefault(); pts.set(ev.pointerId, [ev.clientX, ev.clientY]); try { node.setPointerCapture(ev.pointerId); } catch (err) {} fn(ev.clientX, ev.clientY, 0); };
+  const move = ev => { const q = pts.get(ev.pointerId); if (!q) return; const d = Math.hypot(ev.clientX - q[0], ev.clientY - q[1]) / S; pts.set(ev.pointerId, [ev.clientX, ev.clientY]); fn(ev.clientX, ev.clientY, d, q[0], q[1]); };
+  const up = ev => pts.delete(ev.pointerId);
   node.addEventListener('pointerdown', down); node.addEventListener('pointermove', move); node.addEventListener('pointerup', up); node.addEventListener('pointercancel', up);
 }
+// 소스·밥·글레이즈를 손가락으로 칠하기
+function paintStep(ctx, o) {
+  const cv = o.cv, g = cv.getContext('2d'), cells = new Set(); let cur = o.sauces[0], lastSq = 0;
+  o.sauces.forEach((s, i) => {
+    const b = document.createElement('button'); b.className = 'tbtn' + (i ? '' : ' sel'); b.appendChild(ing(s)); ctx.tray.appendChild(b);
+    b.addEventListener('pointerdown', () => { cur = s; snd.pick(); announce(b, s.n); ctx.tray.querySelectorAll('.tbtn').forEach(x => x.classList.toggle('sel', x === b)); });
+  });
+  g.lineWidth = o.lw || 80; g.lineCap = 'round';
+  scrub(cv, (cx, cy, d, px, py) => {
+    const a = local(cv, cx, cy), q = px == null ? a : local(cv, px, py);
+    g.strokeStyle = cur.color; g.beginPath(); g.moveTo(q.x, q.y); g.lineTo(a.x + .01, a.y); g.stroke();
+    const now = performance.now(); if (now - lastSq > 110) { lastSq = now; snd.squish(); }
+    if (!o.inside || o.inside(a)) cells.add(Math.floor(a.x / o.cell) + ',' + Math.floor(a.y / o.cell));
+    if (cells.size >= o.need) ctx.ready();
+  });
+  hint.rub(cv);
+}
 
-// 큰 버튼 한 번 누르면 게이지가 차오르는 단계 (굽기/갈기)
+// 큰 버튼 한 번 누르면 게이지가 차오르는 단계 (굽기/갈기/말기)
 function pressStep(ctx, o) {
   const bar = el('heat', '<i></i>'), btn = document.createElement('button');
   btn.className = 'bigbtn'; btn.textContent = o.icon || '🔥';
   ctx.area.append(bar, btn);
-  let p = 0, running = false, stopLoop, lastT, lastSteam = 0;
+  let pr = 0, running = false, stopLoop, lastT, lastSteam = 0;
   function frame(t) {
     if (!ctx.alive) { stopLoop && stopLoop(); return; }
-    p = Math.min(1, p + (t - lastT) / (o.dur || 3800)); lastT = t;
-    bar.firstChild.style.width = p * 100 + '%'; o.tick && o.tick(p);
-    if (o.steam && t - lastSteam > 350) { lastSteam = t; const s = el('steam', o.steam); const c = toStage(center(o.steamAt).cx, center(o.steamAt).cy); s.style.left = c.x + rnd(-90, 60) + 'px'; s.style.top = c.y - 60 + 'px'; ctx.area.appendChild(s); setTimeout(() => s.remove(), 1200); }
-    if (p < 1) return requestAnimationFrame(frame);
+    pr = Math.min(1, pr + (t - lastT) / (o.dur || 3800)); lastT = t;
+    bar.firstChild.style.width = pr * 100 + '%'; o.tick && o.tick(pr);
+    if (o.steam && t - lastSteam > 350) { lastSteam = t; const s = el('steam', o.steam), q = center(o.steamAt), k = toStage(q.cx, q.cy); s.style.left = k.x + rnd(-90, 60) + 'px'; s.style.top = k.y - 60 + 'px'; ctx.area.appendChild(s); setTimeout(() => s.remove(), 1200); }
+    if (pr < 1) return requestAnimationFrame(frame);
     stopLoop(); snd.ding(); btn.classList.remove('run'); btn.textContent = '✨'; o.done && o.done();
-    const c = center(o.steamAt || bar); sparkle(c.cx, c.cy);
+    const q = center(o.steamAt || bar); sparkle(q.cx, q.cy);
     setTimeout(() => ctx.finish(), 1100);
   }
-  btn.addEventListener('pointerdown', e => {
-    e.preventDefault();
-    if (p >= 1) return;
+  btn.addEventListener('pointerdown', ev => {
+    ev.preventDefault();
+    if (pr >= 1) return;
     if (!running) { running = true; snd.click(); btn.classList.add('run'); stopLoop = snd.loop(o.loop || 'sizzle'); lastT = performance.now(); requestAnimationFrame(frame); }
-    else { p = Math.min(.99, p + .04); snd.bubble(); sparkle(e.clientX, e.clientY, ['🔥', '✨']); }
+    else { pr = Math.min(.99, pr + .04); snd.bubble(); sparkle(ev.clientX, ev.clientY, ['🔥', '✨']); }
   });
   hint.tap(btn);
 }
@@ -510,92 +696,80 @@ function oven(ctx, scale) {
   mount(win, ctx.dish, 213, 118, scale);
   return { win, glow: o.querySelector('.glow') };
 }
-const mixColor = cols => { if (!cols.length) return '#ffb13b'; const s = [0, 0, 0]; cols.forEach(c => { const n = parseInt(c.slice(1), 16); s[0] += n >> 16; s[1] += (n >> 8) & 255; s[2] += n & 255; }); return `rgb(${s.map(v => Math.round(v / cols.length)).join(',')})`; };
+// 프라이팬에서 색이 변하며 익는 단계
+function panFry(ctx, from, to, o = {}) {
+  const pn = el('pan', '<div class="raw"></div>'); ctx.area.appendChild(pn);
+  const raw = pn.firstChild; raw.style.background = from; let flipped = false;
+  pressStep(ctx, { steam: '💨', steamAt: pn, tick: t => { raw.style.background = mixHex(from, to, t); if (o.flip && t > .5 && !flipped) { flipped = true; raw.classList.add('flip'); snd.whoosh(); } } });
+}
+const base = (id, w) => svgHTML(id, w, 'base');
+const I = (n, a, x) => Object.assign({ n, a }, x); // 재료: 이름, 그림
 
 /* ================= 레시피 ================= */
+const TOPS = { berry: I('딸기', 'berry'), cherry: I('체리', 'cherry'), blue: I('블루베리', 'blue'), star: I('별사탕', 'star', { w: 60 }), heart: I('하트 사탕', 'heart', { w: 60 }), cookie: I('쿠키', 'cookie'), marsh: I('마시멜로', 'marsh', { w: 64 }), sprinkle: I('알록달록 가루', 'sprinkle', { w: 70 }), chips: I('초코칩', 'chips', { w: 66 }), wafer: I('과자', 'wafer', { w: 90 }) };
+
 const RECIPES = {
   pizza: {
-    name: '피자', icon: '🍕',
-    makeDish() { return el('dish', '<div class="dough"></div><canvas class="sauce" width="324" height="324"></canvas><div class="tops"></div>'); },
+    name: '피자', card: 'm_pizza',
+    makeDish() { return el('dish', base('dough', 400) + '<canvas class="sauce" width="324" height="324"></canvas><div class="tops"></div>'); },
     steps: [
       { text: '🥫 소스를 쓱쓱 발라요', say: '소스를 쓱쓱 발라요',
         setup(ctx) {
           ctx.area.appendChild(el('board')); mount(ctx.area, ctx.dish, 380, 350, 1);
-          const cv = ctx.dish.querySelector('canvas'), g = cv.getContext('2d'), cells = new Set();
-          const sauces = [{ e: '🍅', color: '#e9503a' }, { e: '🧀', color: '#ffd668' }, { e: '🌿', color: '#8fcb5a' }, { e: '🥛', color: '#fff4dc' }];
-          let cur = sauces[0], lastSq = 0;
-          sauces.forEach((s, i) => {
-            const b = document.createElement('button'); b.className = 'tbtn' + (i ? '' : ' sel'); const d = ing(s); d.textContent = s.e; b.appendChild(d); ctx.tray.appendChild(b);
-            b.addEventListener('pointerdown', () => { cur = s; snd.pick(); ctx.tray.querySelectorAll('.tbtn').forEach(x => x.classList.toggle('sel', x === b)); });
-          });
-          g.lineWidth = 80; g.lineCap = 'round';
-          scrub(cv, (cx, cy, d, px, py) => {
-            const p = local(cv, cx, cy), q = px == null ? p : local(cv, px, py);
-            g.strokeStyle = cur.color; g.beginPath(); g.moveTo(q.x, q.y); g.lineTo(p.x + .01, p.y); g.stroke();
-            const now = performance.now(); if (now - lastSq > 110) { lastSq = now; snd.squish(); }
-            if (Math.hypot(p.x - 162, p.y - 162) < 165) cells.add(Math.floor(p.x / 54) + ',' + Math.floor(p.y / 54));
-            if (cells.size >= 17) ctx.ready();
-          });
-          hint.rub(cv);
+          paintStep(ctx, { cv: ctx.dish.querySelector('canvas'), cell: 54, need: 17, inside: a => Math.hypot(a.x - 162, a.y - 162) < 165,
+            sauces: [I('토마토 소스', 's_tomato', { color: '#e9503a' }), I('치즈 소스', 's_cheese', { color: '#ffd668' }), I('바질 소스', 's_pesto', { color: '#8fcb5a' }), I('크림 소스', 's_cream', { color: '#fff4dc' })] });
         } },
       { text: '🍄 토핑을 올려요', say: '맛있는 토핑을 올려요',
         setup(ctx) {
           ctx.area.appendChild(el('board')); mount(ctx.area, ctx.dish, 380, 350, 1);
-          const dough = ctx.dish.querySelector('.dough'), tops = ctx.dish.querySelector('.tops');
+          const tops = ctx.dish.querySelector('.tops'), R0 = () => ctx.dish.getBoundingClientRect();
           dropStep(ctx, {
-            items: [{ cls: 'pep' }, { e: '🧀' }, { e: '🍄' }, { e: '🫑' }, { e: '🍅' }, { e: '🌽' }, { e: '🫒' }, { e: '🍍' }],
-            target: dough, place: freePlace(tops),
-            accept(cx, cy) { const c = center(dough), r = dough.getBoundingClientRect().width / 2; return Math.hypot(cx - c.cx, cy - c.cy) < r * 1.02; },
-            auto() { const c = center(dough), r = dough.getBoundingClientRect().width / 2 * rnd(0, .62), a = rnd(0, 6.28); return { cx: c.cx + Math.cos(a) * r, cy: c.cy + Math.sin(a) * r }; },
+            items: [I('페퍼로니', 'pep'), I('치즈', 'mozz'), I('버섯', 'mush'), I('피망', 'pepper'), I('토마토', 'tomato'), I('옥수수', 'corn', { w: 66 }), I('올리브', 'olive', { w: 66 }), I('파인애플', 'pine', { w: 66 })],
+            target: ctx.dish, place: freePlace(tops),
+            accept(cx, cy) { const b = R0(); return Math.hypot(cx - b.left - b.width / 2, cy - b.top - b.height / 2) < b.width * .48; },
+            auto() { const b = R0(), q = b.width * rnd(0, .3), a = rnd(0, 6.28); return { cx: b.left + b.width / 2 + Math.cos(a) * q, cy: b.top + b.height / 2 + Math.sin(a) * q }; },
           });
         } },
       { text: '🔥 오븐에 구워요', say: '오븐에 구워요. 버튼을 꾹!', noTray: true,
         setup(ctx) {
           const o = oven(ctx, .58);
-          pressStep(ctx, { steam: '♨️', steamAt: o.win, tick: p => { o.glow.style.opacity = p * .8; if (p > .6) ctx.dish.classList.add('baked'); }, done: () => { o.glow.style.opacity = .25; } });
+          pressStep(ctx, { steam: '♨️', steamAt: o.win, tick: t => { o.glow.style.opacity = t * .8; if (t > .6) ctx.dish.classList.add('baked'); }, done: () => { o.glow.style.opacity = .25; } });
         } },
     ],
   },
 
   burger: {
-    name: '햄버거', icon: '🍔',
-    makeDish() { return el('dish', '<div class="bplate"></div><div class="stack"><div class="bun-b"></div></div><div class="tops"></div>'); },
+    name: '햄버거', card: 'm_burger',
+    makeDish() { return el('dish', `<div class="bplate"></div><div class="stack"><div class="ly">${svgHTML('bunB', 280)}</div></div><div class="tops"></div>`); },
     steps: [
-      { text: '🍳 고기를 지글지글 구워요', say: '고기를 지글지글 구워요', noTray: true,
-        setup(ctx) {
-          const pan = el('pan', '<div class="raw"></div>'); ctx.area.appendChild(pan);
-          const raw = pan.firstChild, lerp = (a, b, p) => Math.round(a + (b - a) * p);
-          const paint = p => raw.style.background = `rgb(${lerp(240, 122, p)},${lerp(150, 68, p)},${lerp(150, 36, p)})`;
-          paint(0);
-          pressStep(ctx, { steam: '💨', steamAt: pan, tick: paint });
-        } },
+      { text: '🍳 고기를 지글지글 구워요', say: '고기를 지글지글 구워요', noTray: true, setup(ctx) { panFry(ctx, '#f09696', '#7a4424'); } },
       { text: '🥬 차곡차곡 쌓아요', say: '재료를 차곡차곡 쌓아요',
         setup(ctx) {
           mount(ctx.area, ctx.dish, 380, 350, 1);
           const stack = ctx.dish.querySelector('.stack');
           dropStep(ctx, {
-            items: [{ id: 'patty', cls: 'patty' }, { id: 'cheese', e: '🧀' }, { id: 'lettuce', e: '🥬' }, { id: 'tomato', e: '🍅' }, { id: 'bacon', e: '🥓' }, { id: 'egg', e: '🍳' }, { id: 'onion', e: '🧅' }, { id: 'pickle', e: '🥒' }],
+            items: [I('고기', 'patty', { L: 'L_patty' }), I('치즈', 'cheese', { L: 'L_cheese', ov: 10 }), I('상추', 'lettuce', { L: 'L_lettuce', ov: 12 }), I('토마토', 'tomato', { L: 'L_tomato' }), I('베이컨', 'bacon', { L: 'L_bacon', ov: 10 }), I('달걀', 'egg', { L: 'L_egg', ov: 10 }), I('양파', 'onion', { L: 'L_onion' }), I('피클', 'pickle', { L: 'L_pickle' })],
             target: ctx.dish,
-            auto() { const r = stack.getBoundingClientRect(), d = ctx.dish.getBoundingClientRect(); return { cx: d.left + d.width / 2, cy: r.top - 20 * S }; },
-            place(item) { if (stack.children.length >= 12) stack.children[1].remove(); stack.appendChild(el('ly ly-' + item.id)); },
+            auto() { const b = stack.getBoundingClientRect(), d = ctx.dish.getBoundingClientRect(); return { cx: d.left + d.width / 2, cy: b.top - 20 * S }; },
+            place(item) { addLayer(stack, item, 11, 1); },
           });
         },
-        onCheck(ctx) { ctx.dish.querySelector('.stack').appendChild(el('bun-t')); snd.plop(); } },
+        onCheck(ctx) { const d = el('ly', svgHTML('bunT', 280)); d.style.marginBottom = '-8px'; topLayer(ctx.dish.querySelector('.stack'), d); snd.plop(); } },
       { text: '🍟 곁들임을 놓아요', say: '감자튀김이랑 음료수도 놓아요',
         setup(ctx) {
           mount(ctx.area, ctx.dish, 380, 350, 1);
           dropStep(ctx, {
-            items: [{ e: '🍟' }, { e: '🥤' }, { e: '🧃' }, { e: '🥗' }, { e: '🍦' }, { e: '🚩' }, { e: '🌭' }, { e: '🍪' }],
-            target: ctx.dish, place: freePlace(ctx.dish.querySelector('.tops'), 30),
-            auto() { const r = ctx.dish.getBoundingClientRect(), left = Math.random() < .5; return { cx: r.left + r.width * (left ? rnd(.08, .2) : rnd(.8, .92)), cy: r.top + r.height * rnd(.45, .8) }; },
+            items: [I('감자튀김', 'fries', { w: 96 }), I('콜라', 'cola', { w: 92 }), I('깃발', 'flag'), I('쿠키', 'cookie', { w: 64 }), TOPS.berry, TOPS.cherry],
+            target: ctx.dish, place: freePlace(ctx.dish.querySelector('.tops'), { max: 30, rot: 8 }),
+            auto() { const b = ctx.dish.getBoundingClientRect(), left = Math.random() < .5; return { cx: b.left + b.width * (left ? rnd(.06, .16) : rnd(.84, .94)), cy: b.top + b.height * rnd(.5, .8) }; },
           });
         } },
     ],
   },
 
   cupcake: {
-    name: '컵케이크', icon: '🧁',
-    makeDish() { return el('dish', '<div class="ccake"></div><div class="cwrap"></div><div class="frost"><i></i><i></i><i></i></div><div class="tops"></div>'); },
+    name: '컵케이크', card: 'm_cupcake',
+    makeDish() { return el('dish', '<div class="ccake"></div><div class="cwrap"></div>' + svgHTML('frost', 260, 'frost') + '<div class="tops"></div>'); },
     bowl(ctx) {
       if (!ctx.state.bowl) { ctx.state.bowl = el('bowl', '<div class="in"><div class="batter"></div><div class="tops"></div></div>'); ctx.state.choco = false; }
       ctx.area.appendChild(ctx.state.bowl); return ctx.state.bowl;
@@ -603,11 +777,11 @@ const RECIPES = {
     steps: [
       { text: '🥚 그릇에 재료를 넣어요', say: '그릇에 재료를 넣어요',
         setup(ctx) {
-          const bowl = RECIPES.cupcake.bowl(ctx), inn = bowl.querySelector('.in'), put = freePlace(bowl.querySelector('.tops'), 14);
+          const bowl = RECIPES.cupcake.bowl(ctx), inn = bowl.querySelector('.in'), put = freePlace(bowl.querySelector('.tops'), { max: 14 });
           dropStep(ctx, {
-            items: [{ e: '🥚' }, { e: '🥛' }, { e: '🧈' }, { e: '🌾' }, { e: '🍯' }, { e: '🍫', choco: true }],
+            items: [I('달걀', 'eggw'), I('우유', 'milk'), I('버터', 'butter'), I('밀가루', 'flour'), I('꿀', 'honey'), I('초콜릿', 'choco', { isChoco: true })],
             target: inn, min: 2,
-            place(item, cx, cy) { if (item.choco) ctx.state.choco = true; put(item, cx, cy); },
+            place(item, cx, cy) { if (item.isChoco) ctx.state.choco = true; put(item, cx, cy); },
           });
         } },
       { text: '🥄 빙글빙글 섞어요', say: '빙글빙글 섞어요', noTray: true,
@@ -621,29 +795,29 @@ const RECIPES = {
           let dist = 0, lastSq = 0;
           scrub(bowl, (cx, cy, d) => {
             const sp = toStage(cx, cy); spoon.style.left = sp.x + 'px'; spoon.style.top = sp.y + 'px';
-            dist += d; const p = Math.min(1, dist / 2600);
-            bat.style.opacity = Math.min(1, p * 2.2); bat.style.transform = `rotate(${dist * .35}deg)`; tops.style.opacity = Math.max(0, 1 - p * 1.6);
-            bar.firstChild.style.width = p * 100 + '%';
+            dist += d; const t = Math.min(1, dist / 2600);
+            bat.style.opacity = Math.min(1, t * 2.2); bat.style.transform = `rotate(${dist * .35}deg)`; tops.style.opacity = Math.max(0, 1 - t * 1.6);
+            bar.firstChild.style.width = t * 100 + '%';
             const now = performance.now(); if (d > 0 && now - lastSq > 130) { lastSq = now; snd.squish(); }
-            if (p >= 1) ctx.ready();
+            if (t >= 1) ctx.ready();
           });
           hint.rub(bowl);
         } },
       { text: '🔥 오븐에 구워요', say: '오븐에 구워요. 버튼을 꾹!', noTray: true,
         setup(ctx) {
           const o = oven(ctx, .62); ctx.dish.style.top = '70px';
-          pressStep(ctx, { steam: '♨️', steamAt: o.win, tick: p => { o.glow.style.opacity = p * .8; ctx.dish.style.setProperty('--rise', .3 + .7 * p); if (p > .7) ctx.dish.classList.add('baked'); }, done: () => { o.glow.style.opacity = .25; } });
+          pressStep(ctx, { steam: '♨️', steamAt: o.win, tick: t => { o.glow.style.opacity = t * .8; ctx.dish.style.setProperty('--rise', .3 + .7 * t); if (t > .7) ctx.dish.classList.add('baked'); }, done: () => { o.glow.style.opacity = .25; } });
         } },
       { text: '🍓 예쁘게 꾸며요', say: '크림을 올리고 예쁘게 꾸며요',
         setup(ctx) {
           mount(ctx.area, ctx.dish, 380, 370, 1);
-          const frost = ctx.dish.querySelector('.frost'), put = freePlace(ctx.dish.querySelector('.tops'), 40);
+          const frost = ctx.dish.querySelector('.frost'), put = freePlace(ctx.dish.querySelector('.tops'), { max: 40 });
           dropStep(ctx, {
-            items: [{ e: '', color: '#ff9ec4' }, { e: '', color: '#fffaf0' }, { e: '', color: '#8a5530' }, { e: '', color: '#9fe3d0' }, { e: '🍓' }, { e: '🍒' }, { e: '🍬' }, { e: '⭐' }],
+            items: [I('딸기 크림', 'f_pink', { color: '#ff9ec4' }), I('생크림', 'f_white', { color: '#fffaf0' }), I('초코 크림', 'f_choco', { color: '#8a5530' }), I('민트 크림', 'f_mint', { color: '#9fe3d0' }), TOPS.berry, TOPS.cherry, TOPS.blue, TOPS.star],
             target: ctx.dish, min: 2,
-            auto() { const r = ctx.dish.getBoundingClientRect(); return { cx: r.left + r.width * rnd(.34, .66), cy: r.top + r.height * rnd(.1, .42) }; },
+            auto() { const b = ctx.dish.getBoundingClientRect(); return { cx: b.left + b.width * rnd(.34, .66), cy: b.top + b.height * rnd(.1, .42) }; },
             place(item, cx, cy) {
-              if (item.color) { ctx.dish.style.setProperty('--frost', item.color); frost.classList.remove('on'); void frost.offsetWidth; frost.classList.add('on'); }
+              if (item.color) { ctx.dish.style.setProperty('--frost', item.color); frost.classList.remove('on'); void frost.getBoundingClientRect(); frost.classList.add('on'); }
               else put(item, cx, cy);
             },
           });
@@ -652,7 +826,7 @@ const RECIPES = {
   },
 
   juice: {
-    name: '과일 주스', icon: '🥤',
+    name: '과일 주스', card: 'm_juice',
     makeDish() { return el('dish', '<div class="straw"></div><div class="glass"><div class="liq"></div></div><div class="tops"></div>'); },
     blender(ctx) {
       if (!ctx.state.jar) { ctx.state.jar = el('jar', '<div class="liq"></div>'); ctx.state.cols = []; }
@@ -663,14 +837,14 @@ const RECIPES = {
         setup(ctx) {
           const jar = RECIPES.juice.blender(ctx);
           dropStep(ctx, {
-            items: [{ e: '🍓', c: '#f0476a' }, { e: '🍌', c: '#ffe27a' }, { e: '🍊', c: '#ff9f2e' }, { e: '🥝', c: '#9bd04e' }, { e: '🫐', c: '#6f6bd8' }, { e: '🍉', c: '#ff6f7d' }, { e: '🍑', c: '#ffb48a' }, { e: '🥭', c: '#ffc233' }],
+            items: [I('딸기', 'berry', { col: '#f0476a' }), I('바나나', 'banana', { col: '#ffe27a' }), I('오렌지', 'orange', { col: '#ff9f2e' }), I('키위', 'kiwi', { col: '#9bd04e' }), I('블루베리', 'blue', { col: '#6f6bd8' }), I('수박', 'melon', { col: '#ff6f7d' }), I('복숭아', 'peach', { col: '#ffb48a' }), I('망고', 'mango', { col: '#ffc233' })],
             target: jar,
-            auto() { const r = jar.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height * .15 }; },
+            auto() { const b = jar.getBoundingClientRect(); return { cx: b.left + b.width / 2, cy: b.top + b.height * .15 }; },
             place(item) {
               const n = jar.querySelectorAll('.fr').length;
               if (n >= 12) { jar.querySelector('.fr').remove(); ctx.state.cols.shift(); }
-              ctx.state.cols.push(item.c);
-              const f = el('fr', item.e), k = n % 12;
+              ctx.state.cols.push(item.col);
+              const f = el('fr', svgHTML(item.a, 62)), k = n % 12;
               f.style.left = 70 + (k % 3) * 60 + rnd(-8, 8) + 'px'; f.style.top = 250 - Math.floor(k / 3) * 58 + rnd(-6, 6) + 'px';
               jar.appendChild(f);
             },
@@ -682,7 +856,7 @@ const RECIPES = {
           liq.style.background = col; ctx.dish.style.setProperty('--juice', col);
           const frs = [...jar.querySelectorAll('.fr')];
           pressStep(ctx, { icon: '🌀', loop: 'blend', dur: 3400, steamAt: jar,
-            tick: p => { jar.classList.add('shake'); liq.style.height = p * 78 + '%'; frs.forEach(f => { f.classList.add('spin'); f.style.opacity = 1 - p; }); },
+            tick: t => { jar.classList.add('shake'); liq.style.height = t * 78 + '%'; frs.forEach(f => { f.classList.add('spin'); f.style.opacity = 1 - t; }); },
             done: () => jar.classList.remove('shake') });
         } },
       { text: '🧊 컵을 예쁘게 꾸며요', say: '주스를 따르고 예쁘게 꾸며요',
@@ -691,9 +865,140 @@ const RECIPES = {
           const liq = ctx.dish.querySelector('.liq');
           setTimeout(() => { if (ctx.alive) { liq.style.height = '80%'; snd.pour(); } }, 250);
           dropStep(ctx, {
-            items: [{ e: '🧊' }, { e: '🍋' }, { e: '🍒' }, { e: '🍓' }, { e: '⛱️' }, { e: '🌸' }, { e: '⭐' }, { e: '💗' }],
-            target: ctx.dish, place: freePlace(ctx.dish.querySelector('.tops'), 40),
-            auto() { const r = ctx.dish.getBoundingClientRect(); return { cx: r.left + r.width * rnd(.3, .7), cy: r.top + r.height * rnd(.18, .5) }; },
+            items: [I('얼음', 'ice', { w: 64 }), I('레몬', 'lemon', { w: 70 }), TOPS.cherry, TOPS.berry, I('우산', 'umbrella', { w: 90 }), I('꽃', 'flower', { w: 64 }), TOPS.star, TOPS.heart],
+            target: ctx.dish, place: freePlace(ctx.dish.querySelector('.tops'), { max: 40 }),
+            auto() { const b = ctx.dish.getBoundingClientRect(); return { cx: b.left + b.width * rnd(.3, .7), cy: b.top + b.height * rnd(.18, .5) }; },
+          });
+        } },
+    ],
+  },
+
+  icecream: {
+    name: '아이스크림', card: 'm_ice',
+    makeDish() { return el('dish ice', svgHTML('cone', 150, 'cone') + '<div class="stack"></div><div class="tops"></div>'); },
+    steps: [
+      { text: '🍦 아이스크림을 올려요', say: '아이스크림을 동글동글 올려요',
+        setup(ctx) {
+          mount(ctx.area, ctx.dish, 380, 372, 1);
+          const stack = ctx.dish.querySelector('.stack');
+          dropStep(ctx, {
+            items: [['딸기 맛', 'berry'], ['초코 맛', 'choco'], ['바닐라 맛', 'vanilla'], ['민트 맛', 'mint'], ['블루베리 맛', 'blue'], ['망고 맛', 'mango']].map(q => I(q[0], 'i_' + q[1], { L: 'L_i_' + q[1], ov: 34 })),
+            target: ctx.dish,
+            auto() { const b = ctx.dish.getBoundingClientRect(), s = stack.getBoundingClientRect(); return { cx: b.left + b.width / 2, cy: (s.height ? s.top : b.top + b.height * .5) - 10 * S }; },
+            place(item) { addLayer(stack, item, 4); },
+          });
+        } },
+      { text: '🍒 토핑으로 꾸며요', say: '토핑으로 예쁘게 꾸며요',
+        setup(ctx) {
+          mount(ctx.area, ctx.dish, 380, 372, 1);
+          const stack = ctx.dish.querySelector('.stack');
+          dropStep(ctx, {
+            items: [TOPS.cherry, TOPS.berry, TOPS.cookie, TOPS.wafer, TOPS.sprinkle, TOPS.chips, TOPS.star, TOPS.heart],
+            target: ctx.dish, place: freePlace(ctx.dish.querySelector('.tops'), { max: 40 }),
+            accept(cx, cy) { const b = ctx.dish.getBoundingClientRect(); return cx > b.left && cx < b.right && cy > b.top - 80 * S && cy < b.bottom; },
+            auto() { const s = stack.getBoundingClientRect(); return { cx: s.left + s.width * rnd(.25, .75), cy: s.top + s.height * rnd(.05, .6) }; },
+          });
+        } },
+    ],
+  },
+
+  donut: {
+    name: '도넛', card: 'm_donut',
+    makeDish() { return el('dish', base('donut', 400) + '<canvas class="glaze" width="400" height="400"></canvas><div class="tops"></div>'); },
+    steps: [
+      { text: '🍩 도넛을 노릇노릇 튀겨요', say: '도넛을 노릇노릇 튀겨요. 버튼을 꾹!', noTray: true,
+        setup(ctx) {
+          const pn = el('pan oil'); ctx.area.appendChild(pn); mount(pn, ctx.dish, 157, 157, .62);
+          pressStep(ctx, { steam: '🫧', steamAt: pn, tick: t => ctx.dish.style.setProperty('--dn', mixHex('#f6e6bd', '#e0a04a', t)) });
+        } },
+      { text: '🍫 달콤하게 발라요', say: '달콤한 옷을 쓱쓱 발라요',
+        setup(ctx) {
+          ctx.area.appendChild(el('board plate')); mount(ctx.area, ctx.dish, 380, 350, 1);
+          paintStep(ctx, { cv: ctx.dish.querySelector('canvas'), cell: 50, need: 15, lw: 70,
+            inside: a => { const d = Math.hypot(a.x - 200, a.y - 200); return d > 60 && d < 170; },
+            sauces: [I('딸기 크림', 'g_berry', { color: '#ff9ec4' }), I('초콜릿', 'g_choco', { color: '#7a4424' }), I('바닐라 크림', 'g_vanilla', { color: '#fff3d0' }), I('말차 크림', 'g_matcha', { color: '#a8d672' })] });
+        } },
+      { text: '✨ 솔솔 뿌려요', say: '알록달록 솔솔 뿌려요',
+        setup(ctx) {
+          ctx.area.appendChild(el('board plate')); mount(ctx.area, ctx.dish, 380, 350, 1);
+          const ringDist = (cx, cy) => { const b = ctx.dish.getBoundingClientRect(); return Math.hypot(cx - b.left - b.width / 2, cy - b.top - b.height / 2) / b.width; };
+          dropStep(ctx, {
+            items: [TOPS.sprinkle, TOPS.chips, TOPS.star, TOPS.heart, TOPS.berry, TOPS.blue, TOPS.marsh, TOPS.cherry].map(t => Object.assign({}, t, { w: Math.min(t.w || 84, 62) })),
+            target: ctx.dish, place: freePlace(ctx.dish.querySelector('.tops')),
+            accept(cx, cy) { const d = ringDist(cx, cy); return d > .1 && d < .47; },
+            auto() { const b = ctx.dish.getBoundingClientRect(), a = rnd(0, 6.28), q = b.width * rnd(.24, .34); return { cx: b.left + b.width / 2 + Math.cos(a) * q, cy: b.top + b.height / 2 + Math.sin(a) * q }; },
+          });
+        } },
+    ],
+  },
+
+  kimbap: {
+    name: '김밥', card: 'm_kimbap',
+    makeDish() { return el('dish', '<div class="sheet">' + svgHTML('gim', 360) + '<canvas class="rice" width="330" height="250"></canvas><div class="tops"></div></div><div class="rolls"></div>'); },
+    steps: [
+      { text: '🍚 김 위에 밥을 펴요', say: '김 위에 밥을 쓱쓱 펴요',
+        setup(ctx) {
+          ctx.area.appendChild(el('mat')); mount(ctx.area, ctx.dish, 380, 350, 1);
+          paintStep(ctx, { cv: ctx.dish.querySelector('canvas'), cell: 55, need: 17, lw: 70,
+            sauces: [I('흰 쌀밥', 'rice_w', { color: '#fffdf5' }), I('보라 잡곡밥', 'rice_p', { color: '#e3cfe8' })] });
+        } },
+      { text: '🥕 속 재료를 올려요', say: '속 재료를 나란히 올려요',
+        setup(ctx) {
+          ctx.area.appendChild(el('mat')); mount(ctx.area, ctx.dish, 380, 350, 1);
+          const sheet = ctx.dish.querySelector('.sheet'), put = freePlace(sheet.querySelector('.tops'), { max: 12, rot: 3, fixX: 180 });
+          ctx.state.fill = [];
+          dropStep(ctx, {
+            items: [['단무지', 'danmuji', '#ffd84a'], ['햄', 'ham', '#f59aa5'], ['달걀', 'egg', '#ffe88a'], ['당근', 'carrot', '#ff8a3c'], ['시금치', 'spinach', '#4fa84a'], ['오이', 'cucumber', '#9bd46a'], ['맛살', 'crab', '#ff6b5e'], ['우엉', 'burdock', '#a8743f']].map(q => I(q[0], 'k_' + q[1], { put: 'L_k_' + q[1], w: 300, col: q[2] })),
+            target: sheet,
+            auto() { const b = sheet.getBoundingClientRect(); return { cx: b.left + b.width / 2, cy: b.top + b.height * rnd(.25, .85) }; },
+            place(item, cx, cy) { const f = ctx.state.fill; if (!f.includes(item.col)) { f.push(item.col); if (f.length > 6) f.shift(); } put(item, cx, cy); },
+          });
+        } },
+      { text: '🌀 돌돌 말아요', say: '돌돌 말아요. 버튼을 꾹!', noTray: true,
+        setup(ctx) {
+          ctx.area.appendChild(el('mat')); mount(ctx.area, ctx.dish, 380, 350, 1);
+          const sheet = ctx.dish.querySelector('.sheet'), rolls = ctx.dish.querySelector('.rolls');
+          pressStep(ctx, { icon: '🌀', loop: 'blend', dur: 3000, steamAt: ctx.dish,
+            tick: t => { sheet.style.transform = `scaleY(${1 - t * .82})`; },
+            done: () => {
+              sheet.style.display = 'none'; rolls.classList.add('on');
+              const art = sliceArt(ctx.state.fill || []);
+              rolls.innerHTML = [[80, 130], [200, 130], [320, 130], [140, 262], [260, 262]].map((q, i) => `<div class="sl" style="left:${q[0]}px;top:${q[1]}px;animation-delay:${i * .12}s"><svg class="art" viewBox="0 0 100 100" style="width:128px;height:128px">${art}</svg></div>`).join('');
+              snd.good();
+            } });
+        } },
+    ],
+  },
+
+  pancake: {
+    name: '팬케이크', card: 'm_pancake',
+    makeDish() { return el('dish', '<div class="bplate"></div><div class="stack"></div><div class="tops"></div>'); },
+    steps: [
+      { text: '🥞 반죽을 노릇하게 구워요', say: '팬케이크를 노릇하게 구워요. 버튼을 꾹!', noTray: true, setup(ctx) { panFry(ctx, '#fbeec2', '#e0a04a', { flip: true }); } },
+      { text: '🥞 높이높이 쌓아요', say: '팬케이크를 높이높이 쌓아요',
+        setup(ctx) {
+          mount(ctx.area, ctx.dish, 380, 350, 1);
+          const stack = ctx.dish.querySelector('.stack');
+          addLayer(stack, { L: 'L_pcake' }, 9);
+          dropStep(ctx, {
+            items: [I('팬케이크', 'pcake', { L: 'L_pcake', ov: 8 }), I('생크림', 'c_white', { L: 'L_cream', ov: 14 }), I('딸기잼', 'jam', { L: 'L_jam', ov: 10 }), I('초코 크림', 'c_choco', { L: 'L_chocoL', ov: 10 }), I('바나나', 'banana', { L: 'L_banana', ov: 8 }), I('블루베리', 'blue', { L: 'L_blue', ov: 10 })],
+            target: ctx.dish,
+            auto() { const b = stack.getBoundingClientRect(), d = ctx.dish.getBoundingClientRect(); return { cx: d.left + d.width / 2, cy: b.top - 20 * S }; },
+            place(item) { addLayer(stack, item, 9); },
+          });
+        } },
+      { text: '🍯 시럽을 뿌리고 꾸며요', say: '달콤한 시럽을 뿌리고 꾸며요',
+        setup(ctx) {
+          mount(ctx.area, ctx.dish, 380, 350, 1);
+          const stack = ctx.dish.querySelector('.stack'), put = freePlace(ctx.dish.querySelector('.tops'), { max: 40 });
+          dropStep(ctx, {
+            items: [I('시럽', 'syrup', { L: 'L_syrup', ov: 38 }), I('버터', 'pat', { w: 70 }), TOPS.berry, TOPS.blue, TOPS.cherry, TOPS.star, TOPS.heart, TOPS.marsh],
+            target: ctx.dish,
+            auto() { const s = stack.getBoundingClientRect(); return { cx: s.left + s.width * rnd(.25, .75), cy: s.top + 4 * S }; },
+            place(item, cx, cy) {
+              if (!item.L) return put(item, cx, cy);
+              if (ctx.state.syrup) return; ctx.state.syrup = true; addLayer(stack, item, 99);
+            },
           });
         } },
     ],
@@ -708,7 +1013,7 @@ function buildMenu() {
   const box = $('#cards'); box.innerHTML = '';
   Object.entries(RECIPES).forEach(([key, r]) => {
     const b = document.createElement('button'); b.className = 'card';
-    b.innerHTML = `<span class="big">${r.icon}</span>${r.name}<span class="made">${made[key] ? '⭐ × ' + made[key] : ''}</span>`;
+    b.innerHTML = `<span class="big">${svgHTML(r.card, 124)}</span>${r.name}<span class="made">${made[key] ? '⭐ × ' + made[key] : ''}</span>`;
     b.addEventListener('click', () => { snd.click(); say(r.name); start(key); });
     box.appendChild(b);
   });
