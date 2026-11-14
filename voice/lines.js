@@ -1,6 +1,6 @@
 // 게임이 말하는 모든 문장. [파일 이름, 종류, 문장] — voice/<파일 이름>.mp3 가 있으면 그 목소리로 재생한다.
 // 음성 파일을 모두 넣은 뒤 VOICE_READY 를 true 로 바꾸면 적용된다. false 면 기기 내장 음성을 쓴다.
-window.VOICE_READY = false;
+window.VOICE_READY = true;
 window.VOICE_LINES = [
   ["v001", "칭찬", "굿!"],
   ["v002", "칭찬", "잘했어요!"],
