@@ -277,6 +277,7 @@ button{font-family:inherit;border:0;cursor:pointer;padding:0}
   <div id="praise"><b></b></div>
 </div>
 
+<script src="voice/lines.js"></script>
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
@@ -299,7 +300,7 @@ function center(node) { const r = node.getBoundingClientRect(); return { cx: r.l
 
 /* ================= 소리 (Web Audio 합성) ================= */
 const snd = (() => {
-  let ac, master, sfxG, musG, noiseBuf, muted = false, timer, nextT = 0, idx = 0;
+  let ac, master, sfxG, musG, noiseBuf, vsrc, muted = false, timer, nextT = 0, idx = 0;
   const MEL = [
     [76,79,76,72,76,79,84,0],[81,77,81,84,81,77,81,0],[83,79,83,86,83,79,74,0],[76,72,76,79,84,0,79,0],
     [84,81,84,88,84,81,76,0],[81,84,81,77,81,84,77,0],[86,83,79,83,86,79,83,86],[84,0,79,0,84,0,0,0]];
@@ -363,8 +364,11 @@ const snd = (() => {
   const arp = (notes, step, dur, vol = .22, type = 'triangle') => notes.forEach((n, i) => tone(hz(n), hz(n), dur, type, vol, i * step));
   return {
     init, loop,
+    get on() { return !!ac; },
+    decode: ab => new Promise((ok, no) => ac.decodeAudioData(ab, ok, no)),
+    voice(buf) { if (!ac) return; try { vsrc && vsrc.stop(); } catch (e) {} vsrc = ac.createBufferSource(); vsrc.buffer = buf; vsrc.connect(master); vsrc.start(); },
     get muted() { return muted; },
-    toggle() { muted = !muted; if (master) master.gain.value = muted ? 0 : 1; if (muted && window.speechSynthesis) speechSynthesis.cancel(); return muted; },
+    toggle() { muted = !muted; if (master) master.gain.value = muted ? 0 : 1; if (muted && window.speechSynthesis) speechSynthesis.cancel(); if (muted) try { vsrc && vsrc.stop(); } catch (e) {} return muted; },
     pause(p) { if (ac) p ? ac.suspend() : ac.resume(); },
     click() { tone(700, 900, .07, 'sine', .25); },
     pick() { tone(420, 880, .09, 'sine', .28); },
@@ -384,8 +388,14 @@ const snd = (() => {
   };
 })();
 
-function say(text) {
-  if (snd.muted || !window.speechSynthesis) return;
+// 녹음된 목소리(voice/*.mp3)가 준비돼 있으면 그것으로, 없으면 기기 내장 음성으로 말한다
+const VO = { map: {}, buf: {}, bad: {}, tok: 0, on: !!window.VOICE_READY };
+(window.VOICE_LINES || []).forEach(l => VO.map[l[2]] = l[0]);
+function loadVoice(id) {
+  return VO.buf[id] || (VO.buf[id] = fetch(`voice/${id}.mp3`).then(res => { if (!res.ok) throw 0; return res.arrayBuffer(); }).then(ab => snd.decode(ab)).catch(() => { VO.bad[id] = 1; return null; }));
+}
+function tts(text) {
+  if (!window.speechSynthesis) return;
   try {
     const ko = speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().startsWith('ko'));
     // 기기에 여러 음성이 있으면 자연스러운 쪽을 먼저 고른다
@@ -397,9 +407,15 @@ function say(text) {
     speechSynthesis.speak(u);
   } catch (e) {}
 }
+function say(text) {
+  if (snd.muted) return;
+  const id = VO.on && VO.map[text], tok = ++VO.tok;
+  if (!id || VO.bad[id] || !snd.on) return tts(text);
+  loadVoice(id).then(b => { if (tok !== VO.tok || snd.muted) return; if (!b) return tts(text); if (window.speechSynthesis) speechSynthesis.cancel(); snd.voice(b); });
+}
 if (window.speechSynthesis) speechSynthesis.getVoices();
 
-document.addEventListener('pointerdown', () => snd.init(), true);
+document.addEventListener('pointerdown', () => { snd.init(); if (VO.on && !VO.pre) { VO.pre = 1; Object.values(VO.map).forEach(loadVoice); } }, true);
 document.addEventListener('visibilitychange', () => snd.pause(document.hidden));
 $('#snd').addEventListener('click', () => { $('#snd').textContent = snd.toggle() ? '🔇' : '🔊'; });
 
