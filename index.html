@@ -332,11 +332,13 @@ const snd = (() => {
 function say(text) {
   if (snd.muted || !window.speechSynthesis) return;
   try {
-    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith('ko'));
+    const ko = speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().startsWith('ko'));
+    // 기기에 여러 음성이 있으면 자연스러운 쪽을 먼저 고른다
+    const v = ['Natural', 'Yuna', '유나', 'Google', 'SunHi', 'Heami'].map(n => ko.find(v => v.name.includes(n))).find(Boolean) || ko[0];
     if (!v) return; // 한국어 음성이 없으면 효과음만
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.voice = v; u.lang = 'ko-KR'; u.pitch = 1.6; u.rate = 1.05;
+    u.voice = v; u.lang = 'ko-KR'; u.pitch = 1.1; u.rate = .95;
     speechSynthesis.speak(u);
   } catch (e) {}
 }
